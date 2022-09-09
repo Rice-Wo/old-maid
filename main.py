@@ -93,21 +93,18 @@ async def _random(ctx,
     await ctx.respond(embed=ran(rand[min], rand[max], rand[times]), view=rdbutton())
 
 
-@bot.slash_command(name="choice")
+@bot.slash_command(name="choice", debug_guilds=[662586019987587089])
 async def _choice(ctx,
-                  name: discord.Option(str, name="請輸入問題"),
-                  times: discord.Option(int, name="選項數量",max_value=10, default=2)):
+                  Q: discord.Option(int, "test", name="請輸入問題"),
+                  times: discord.Option(int, name="選項數量",min_value=2, max_value=10)):
   def check(message):
     return message.author == ctx.user and message.channel == ctx.channel and message.author != bot.user
     
-  try:
-    if int(times) <= 1:
-      await ctx.send('只有一個選項，那就只能選那個了...')
-      return   
+  try: 
     
     select= []  
 
-    for a in range(int(times)):
+    for a in range(times):
       if a+1 <= len(setting['dinner']):
         dinner = f"例如：{setting['dinner'][a]}"
       else:
@@ -115,7 +112,8 @@ async def _choice(ctx,
         
       embed=discord.Embed(title=f"請輸入第 {a+1} 個選項 ",description=dinner, color=discord.Colour.random())
       embed.set_footer(text="請於20秒內完成輸入")
-      await ctx.send(embed=embed)
+      await ctx.respond(embed=embed)
+
       msg2 = await bot.wait_for('message', check=check, timeout=20)
       A = msg2.content
       select.append(A)
@@ -129,7 +127,7 @@ async def _choice(ctx,
       return embed
     
     class cibutton(discord.ui.View): # Create a class called MyView that subclasses discord.ui.View
-      @discord.ui.button(label="再選一次", style=discord.ButtonStyle.primary) # Create a button with the label "😎 Click me!" with color Blurple
+      @discord.ui.button(label="再選一次", style=discord.ButtonStyle.primary)
       async def button_callback(self, button, interaction):
         await interaction.response.edit_message(embed=rc(Q,select, list), view=cibutton())
 
