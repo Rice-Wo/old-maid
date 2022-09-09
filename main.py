@@ -4,6 +4,8 @@ from discord.ext import commands, tasks
 import os
 import json
 import random
+import asyncio
+
 
 
 from dotenv import load_dotenv
@@ -45,8 +47,8 @@ async def on_message(msg):
 
 
 
-@bot.command()
-async def test(ctx):
+@bot.command(name="test")
+async def _test(ctx):
   if ctx.author.id != setting["rice"]:
     await ctx.respond("您不是開發人員")
     return
@@ -89,6 +91,59 @@ async def _random(ctx,
         await interaction.response.edit_message(embed=ran(rand[min], rand[max], rand[times]), view=rdbutton())
 
     await ctx.respond(embed=ran(rand[min], rand[max], rand[times]), view=rdbutton())
+
+select =[]
+@bot.slash_command(name="choice")
+async def _choice(ctx):
+  def check(message):
+    return message.author == ctx.user and message.channel == ctx.channel and message.author != bot.user
+    
+  try:
+    embed=discord.Embed(title="請輸入問題", description="例如：今天晚餐吃什麼",color=discord.Colour.random())
+    embed.set_footer(text="請於20秒內完成輸入")
+    await ctx.respond(embed=embed)
+
+    msg = await bot.wait_for('message', check=check, timeout=20)
+    Q = msg.content
+    print(Q)
+
+    embed=discord.Embed(title="請輸入選項數",description="例如：選項有麵跟飯兩個選項，那就輸入 2", color=discord.Colour.random())
+    embed.set_footer(text="請於20秒內完成輸入")
+    await ctx.send(embed=embed)
+
+    msg1 = await bot.wait_for('message', check=check, timeout=20)
+    print(msg1)
+    times = msg1.content
+    print(times)
+
+    if int(times) <= 1:
+      await ctx.send('只有一個選項，那就只能選那個了...')
+      return
+    
+    
+    for a in range(int(times)):
+      if a+1 <= len(setting['dinner']):
+        dinner = f"例如：{setting['dinner'][a]}"
+      else:
+        dinner = "沒東西吃了"
+        
+      embed=discord.Embed(title=f"請輸入第 {a+1} 個選項 ",description=dinner, color=discord.Colour.random())
+      embed.set_footer(text="請於20秒內完成輸入")
+      await ctx.send(embed=embed)
+      msg2 = await bot.wait_for('message', check=check, timeout=20)
+      A = msg2.content
+      select.append(A)
+
+      list = " ".join(select)
+      
+    embed=discord.Embed(title=f"關於 {Q} ", color = discord.Colour.random())
+    embed.add_field(name=f"{random.choice(select)}", value=f"從 {list} 裡面選一個出來的", inline=False)
+    embed.set_footer(text="本結果為隨機選出，僅供參考")
+    await ctx.send(embed=embed)                
+    
+  except asyncio.TimeoutError:
+    embed=discord.Embed(title="時間已超過", color=0xff2600)
+    await ctx.send(embed=embed)
 
 
 
