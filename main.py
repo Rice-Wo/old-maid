@@ -56,7 +56,7 @@ async def _test(ctx):
     await ctx.respond("i'm still alive :)")
 
 rand = {}
-@bot.slash_command(name="random",debug_guilds=[662586019987587089])
+@bot.command(name="random",debug_guilds=[662586019987587089])
 async def _random(ctx,
                   最大值: discord.Option(int, min_value=-1000, max_value=1000),
                   最小值: discord.Option(int, min_value=-1000, max_value=1000),
@@ -93,10 +93,14 @@ async def _random(ctx,
     await ctx.respond(embed=ran(rand[min], rand[max], rand[times]), view=rdbutton())
 
 
-@bot.slash_command(name="choice", debug_guilds=[662586019987587089])
+
+
+
+
+@bot.command(name="choice")
 async def _choice(ctx,
-                  Q: discord.Option(int, "test", name="請輸入問題"),
-                  times: discord.Option(int, name="選項數量",min_value=2, max_value=10)):
+                  ques: discord.Option(str, name="問題"),
+                  times: discord.Option(int, name="選項數", min_value=2, max_value=10, default=2)):
   def check(message):
     return message.author == ctx.user and message.channel == ctx.channel and message.author != bot.user
     
@@ -120,8 +124,8 @@ async def _choice(ctx,
 
       list = " ".join(select)
 
-    def rc(Q, select, list):  
-      embed=discord.Embed(title=f"關於 {Q} ", color = discord.Colour.random())
+    def rc(ques, select, list):  
+      embed=discord.Embed(title=f"關於 {ques} ", color = discord.Colour.random())
       embed.add_field(name=f"{random.choice(select)}", value=f"從 {list} 裡面選一個出來的", inline=False)
       embed.set_footer(text="本結果為隨機選出，僅供參考")
       return embed
@@ -129,15 +133,27 @@ async def _choice(ctx,
     class cibutton(discord.ui.View): # Create a class called MyView that subclasses discord.ui.View
       @discord.ui.button(label="再選一次", style=discord.ButtonStyle.primary)
       async def button_callback(self, button, interaction):
-        await interaction.response.edit_message(embed=rc(Q,select, list), view=cibutton())
+        await interaction.response.edit_message(embed=rc(ques,select, list), view=cibutton())
 
-    await ctx.send(embed=rc(Q,select, list), view=cibutton())                
+    await ctx.send(embed=rc(ques,select, list), view=cibutton())                
     
   except asyncio.TimeoutError:
     embed=discord.Embed(title="時間已超過", color=0xff2600)
-    await ctx.send(embed=embed)
+    await ctx.send(embed=embed) 
 
-
+@bot.command(name="clean")
+@discord.default_permissions(manage_messages=True)
+async def _clean(ctx,
+                 num: discord.Option(int)):
+  with open('setting.json', 'r', encoding = "utf-8") as setting:
+    setting = json.load(setting)
+  if ctx.author.id != setting["rice"]:
+    await ctx.send("您不是開發人員")
+    return
+  else:
+    await ctx.channel.purge(limit=num+1)
+    await ctx.respond("done")
+    
 
 
 
