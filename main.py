@@ -141,19 +141,12 @@ async def _choice(ctx,
     embed=discord.Embed(title="時間已超過", color=0xff2600)
     await ctx.send(embed=embed) 
 
-@bot.command(name="clean",description="一次性刪掉多條訊息，現在只給主人用喔.w.")
+@bot.command(name="clean",description="一次性刪掉多條訊息")
 @discord.default_permissions(manage_messages=True)
 async def _clean(ctx,
                  num: discord.Option(int)):
-  with open('setting.json', 'r', encoding = "utf-8") as setting:
-    setting = json.load(setting)
-  if ctx.author.id != setting["rice"]:
-    await ctx.send("您不是開發人員")
-    return
-  else:
-    await ctx.channel.purge(limit=num+1)
-    await ctx.respond("done")
-    
+  await ctx.channel.purge(limit=num+1)
+  msg = await ctx.respond(f"成功刪除 {num} 則訊息", delete_after=3)
 
 
 
