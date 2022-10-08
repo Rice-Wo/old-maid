@@ -148,6 +148,13 @@ async def _clean(ctx,
   await ctx.channel.purge(limit=num+1)
   msg = await ctx.respond(f"成功刪除 {num} 則訊息", delete_after=3)
 
+@bot.command(name="updatelog")
+async def _log(ctx):
+  with open("update.txt", "r", encoding='utf8') as f:
+          word = f.read()
+  embed=discord.Embed(title="更新日誌", description=word, color=0x0433ff)
+  await ctx.respond(embed=embed)
+
 
 
 
