@@ -97,9 +97,9 @@ async def _random(ctx,
 
 
 
-@bot.command(name="choice")
+@bot.command(name="choice",description="幫你從兩個到十個選項中選一個")
 async def _choice(ctx,
-                  ques: discord.Option(str, name="問題"),
+                  ques: discord.Option(str,"問題是什麼", name="問題"),
                   times: discord.Option(int, name="選項數", min_value=2, max_value=10, default=2)):
   def check(message):
     return message.author == ctx.user and message.channel == ctx.channel and message.author != bot.user
@@ -141,7 +141,7 @@ async def _choice(ctx,
     embed=discord.Embed(title="時間已超過", color=0xff2600)
     await ctx.send(embed=embed) 
 
-@bot.command(name="clean")
+@bot.command(name="clean",description="一次性刪掉多條訊息，現在只給主人用喔.w.")
 @discord.default_permissions(manage_messages=True)
 async def _clean(ctx,
                  num: discord.Option(int)):
