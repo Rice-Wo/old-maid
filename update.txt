@@ -1,2 +1,5 @@
-2.0.1
-=更新clean指令:自動刪除done
+v2.1
+=clean指令:三秒後會自動刪除done
+=choice:改變選項輸入方式
++weather:新增weather(天氣)指令，可顯示6小時天氣預報
++updatelog:新增updatelog(更新日誌)指令，只會顯示這版本的更新
