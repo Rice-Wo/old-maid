@@ -154,3 +154,4 @@ cython_debug/
 
 # VS code workspace
 maid beta.code-workspace
+Token.json

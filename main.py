@@ -7,22 +7,14 @@ import random
 import asyncio
 import requests
 
-
-
-from dotenv import load_dotenv
-load_dotenv()
-
-
-
-
 bot = discord.Bot(debug_guilds=[662586019987587089],status=discord.Status.do_not_disturb, intents = discord.Intents().all())
-
 
 
 with open('setting.json', 'r', encoding = "utf-8") as setting:
 	setting = json.load(setting)
 
-
+with open('setting.json', 'r', encoding = "utf-8") as token:
+	token = json.load(setting)
 
 
 
@@ -239,13 +231,13 @@ class weather_select(discord.ui.View):
   )
   async def select_callback(self, select, interaction):
     data = await get_data(select.values[0]) 
-    await interaction.response.send_message(embed=data, view=weather_select)
+    await interaction.response.edit_message(embed=data, view=weather_select())
 
 
 @bot.command(name="weather")
 async def _weather(ctx):
   embed=discord.Embed(title="6小時天氣", description="請從下面選一個地區", color=0xaaaaaa)     
-  await ctx.respond(embed=embed, view=weather_select)
+  await ctx.respond(embed=embed, view=weather_select())
 
 
 
@@ -262,5 +254,5 @@ async def _weather(ctx):
 
 
 if __name__ ==  "__main__":
-  TOKEN = os.environ['TOKEN']
+  TOKEN = token['TOKEN']
   bot.run(TOKEN)
