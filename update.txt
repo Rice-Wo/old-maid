@@ -1,2 +1,2 @@
 2.0.1
-=更新clean指令:自動刪除done
+=更新clean指令:自動刪除done.
