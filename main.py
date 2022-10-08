@@ -13,8 +13,8 @@ bot = discord.Bot(debug_guilds=[662586019987587089],status=discord.Status.do_not
 with open('setting.json', 'r', encoding = "utf-8") as setting:
 	setting = json.load(setting)
 
-with open('setting.json', 'r', encoding = "utf-8") as token:
-	token = json.load(setting)
+with open('Token.json', 'r', encoding = "utf-8") as token:
+	token = json.load(token)
 
 
 
@@ -93,53 +93,61 @@ async def _random(ctx,
 @bot.command(name="choice",description="幫你從兩個到十個選項中選一個")
 async def _choice(ctx,
                   ques: discord.Option(str,"問題是什麼", name="問題"),
-                  times: discord.Option(int, name="選項數", min_value=2, max_value=10, default=2)):
-  def check(message):
-    return message.author == ctx.user and message.channel == ctx.channel and message.author != bot.user
-    
-  try: 
-    
-    select= []  
+                  times: discord.Option(int, name="選項數", min_value=2, max_value=5, default=2)):
 
-    for a in range(times):
-      if a+1 <= len(setting['dinner']):
-        dinner = f"例如：{setting['dinner'][a]}"
-      else:
-        dinner = "沒東西吃了"
-        
-      embed=discord.Embed(title=f"請輸入第 {a+1} 個選項 ",description=dinner, color=discord.Colour.random())
-      embed.set_footer(text="請於20秒內完成輸入")
-      await ctx.respond(embed=embed)
 
-      msg2 = await bot.wait_for('message', check=check, timeout=20)
-      A = msg2.content
-      select.append(A)
+  def ci(self, interaction: discord.Interaction):
+    list = []
+    for j in range(len(self.children)):
+      value = self.children[j].value
+      list.append(value)
+    return list
 
-      list = " ".join(select)
+  def rc(ques, list):
+    print(list)
+    select = " ".join(list)  
+    embed=discord.Embed(title=f"關於 {ques} ", color = discord.Colour.random())
+    embed.add_field(name=f"{random.choice(list)}", value=f"從 {select} 裡面選一個出來的", inline=False)
+    embed.set_footer(text="本結果為隨機選出，僅供參考")
+    return embed 
+  
+  class rcbutton(discord.ui.View): # Create a class called MyView that subclasses discord.ui.View
+    @discord.ui.button(label="再選一次", style=discord.ButtonStyle.primary)
+    async def button_callback(self, button, interaction):
+      await interaction.response.edit_message(embed=rc(ques,), view=rcbutton())
 
-    def rc(ques, select, list):  
-      embed=discord.Embed(title=f"關於 {ques} ", color = discord.Colour.random())
-      embed.add_field(name=f"{random.choice(select)}", value=f"從 {list} 裡面選一個出來的", inline=False)
-      embed.set_footer(text="本結果為隨機選出，僅供參考")
-      return embed
-    
-    class cibutton(discord.ui.View): # Create a class called MyView that subclasses discord.ui.View
-      @discord.ui.button(label="再選一次", style=discord.ButtonStyle.primary)
+
+  class cimodal(discord.ui.Modal):
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+
+        for i in range(0, times):
+          self.add_item(discord.ui.InputText(label=f"第 {i+1} 個選項"))        
+
+    async def callback(self, interaction: discord.Interaction):
+        await interaction.response.send_message(embed=rc(ques, ci(self, interaction)), view=rcbutton())
+
+  class cibutton(discord.ui.View):
+      @discord.ui.button(label="Send Modal")
       async def button_callback(self, button, interaction):
-        await interaction.response.edit_message(embed=rc(ques,select, list), view=cibutton())
+          await interaction.response.send_modal(cimodal(title="請輸入選項"))
+  
+  await ctx.respond(view=cibutton())
 
-    await ctx.send(embed=rc(ques,select, list), view=cibutton())                
+
+  
+  
+
+                    
     
-  except asyncio.TimeoutError:
-    embed=discord.Embed(title="時間已超過", color=0xff2600)
-    await ctx.send(embed=embed) 
+  
 
 @bot.command(name="clean",description="一次性刪掉多條訊息")
 @discord.default_permissions(manage_messages=True)
 async def _clean(ctx,
                  num: discord.Option(int)):
   await ctx.channel.purge(limit=num+1)
-  msg = await ctx.respond(f"成功刪除 {num} 則訊息", delete_after=3)
+  await ctx.respond(f"成功刪除 {num} 則訊息", delete_after=3)
 
 @bot.command(name="updatelog")
 async def _log(ctx):
@@ -161,7 +169,7 @@ async def get_data(location):
 
     url = "https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-C0032-001"
     params = {
-        "Authorization": TOKEN,
+        "Authorization": token['CWB-TOKEN'],
         "locationName":location
         
     }
@@ -236,7 +244,7 @@ class weather_select(discord.ui.View):
 
 @bot.command(name="weather")
 async def _weather(ctx):
-  embed=discord.Embed(title="6小時天氣", description="請從下面選一個地區", color=0xaaaaaa)     
+  embed=discord.Embed(title="6小時天氣", description="請從下面選一個地區", color=discord.Colour.random())     
   await ctx.respond(embed=embed, view=weather_select())
 
 
@@ -251,8 +259,6 @@ async def _weather(ctx):
 
 
 
-
-
 if __name__ ==  "__main__":
-  TOKEN = token['TOKEN']
+  TOKEN = token['test']
   bot.run(TOKEN)
