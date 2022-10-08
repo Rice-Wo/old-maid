@@ -90,21 +90,20 @@ async def _random(ctx,
 
 
 
-@bot.command(name="choice",description="幫你從兩個到十個選項中選一個")
+@bot.command(name="choice",description="幫你從兩個到五個選項中選一個")
 async def _choice(ctx,
                   ques: discord.Option(str,"問題是什麼", name="問題"),
                   times: discord.Option(int, name="選項數", min_value=2, max_value=5, default=2)):
-
+  list = []
 
   def ci(self, interaction: discord.Interaction):
-    list = []
+   
     for j in range(len(self.children)):
       value = self.children[j].value
       list.append(value)
     return list
 
   def rc(ques, list):
-    print(list)
     select = " ".join(list)  
     embed=discord.Embed(title=f"關於 {ques} ", color = discord.Colour.random())
     embed.add_field(name=f"{random.choice(list)}", value=f"從 {select} 裡面選一個出來的", inline=False)
@@ -114,7 +113,7 @@ async def _choice(ctx,
   class rcbutton(discord.ui.View): # Create a class called MyView that subclasses discord.ui.View
     @discord.ui.button(label="再選一次", style=discord.ButtonStyle.primary)
     async def button_callback(self, button, interaction):
-      await interaction.response.edit_message(embed=rc(ques,), view=rcbutton())
+      await interaction.response.edit_message(embed=rc(ques, list), view=rcbutton())
 
 
   class cimodal(discord.ui.Modal):
@@ -128,7 +127,7 @@ async def _choice(ctx,
         await interaction.response.send_message(embed=rc(ques, ci(self, interaction)), view=rcbutton())
 
   class cibutton(discord.ui.View):
-      @discord.ui.button(label="Send Modal")
+      @discord.ui.button(label="按這填入選項")
       async def button_callback(self, button, interaction):
           await interaction.response.send_modal(cimodal(title="請輸入選項"))
   
