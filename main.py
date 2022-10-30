@@ -146,8 +146,14 @@ async def _clean(ctx,
 async def _log(ctx):
   with open("update.txt", "r", encoding='utf8') as f:
           word = f.read()
+
+  button = discord.ui.Button(label="更新日誌", url="https://discord.gg/s6G9nsgeNz")
+
+  view = discord.ui.View()
+  view.add_item(button)
+    
   embed=discord.Embed(title="更新日誌", description=word, color=0x0433ff)
-  await ctx.respond(embed=embed)
+  await ctx.respond(embed=embed, view=view)
 
 
 
