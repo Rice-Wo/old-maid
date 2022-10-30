@@ -49,7 +49,7 @@ async def _test(ctx):
     await ctx.respond("i'm still alive :)")
 
 rand = {}
-@bot.command(name="random",debug_guilds=[662586019987587089])
+@bot.command(name="random")
 async def _random(ctx,
                   最大值: discord.Option(int, min_value=-1000, max_value=1000),
                   最小值: discord.Option(int, min_value=-1000, max_value=1000),
