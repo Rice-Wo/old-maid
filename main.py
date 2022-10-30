@@ -24,6 +24,7 @@ async def on_ready():
   print(f"{bot.user} is online")
   
 
+
 @tasks.loop(seconds=5)
 async def status():
   await bot.change_presence(status=discord.Status.do_not_disturb,activity=discord.Game(random.choice(setting["status"])))
@@ -48,13 +49,14 @@ async def _test(ctx):
   else:
     await ctx.respond("i'm still alive :)")
 
-rand = {}
+
+
 @bot.command(name="random")
 async def _random(ctx,
                   最大值: discord.Option(int, min_value=-1000, max_value=1000),
                   最小值: discord.Option(int, min_value=-1000, max_value=1000),
                   times: discord.Option(int, name="抽幾次", min_value=1, max_value=10, default=1)):
-
+    rand = {}
     if 最大值 > 最小值:
       max = 最大值
       min = 最小值
@@ -79,14 +81,11 @@ async def _random(ctx,
       return embed
     
     class rdbutton(discord.ui.View): # Create a class called MyView that subclasses discord.ui.View
-      @discord.ui.button(label="再抽一次", style=discord.ButtonStyle.primary) # Create a button with the label "😎 Click me!" with color Blurple
+      @discord.ui.button(label="再抽一次", style=discord.ButtonStyle.primary) 
       async def button_callback(self, button, interaction):
         await interaction.response.edit_message(embed=ran(rand[min], rand[max], rand[times]), view=rdbutton())
 
     await ctx.respond(embed=ran(rand[min], rand[max], rand[times]), view=rdbutton())
-
-
-
 
 
 
@@ -115,7 +114,6 @@ async def _choice(ctx,
     async def button_callback(self, button, interaction):
       await interaction.response.edit_message(embed=rc(ques, list), view=rcbutton())
 
-
   class cimodal(discord.ui.Modal):
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
@@ -134,12 +132,6 @@ async def _choice(ctx,
   await ctx.respond(view=cibutton())
 
 
-  
-  
-
-                    
-    
-  
 
 @bot.command(name="clean",description="一次性刪掉多條訊息")
 @discord.default_permissions(manage_messages=True)
@@ -147,6 +139,8 @@ async def _clean(ctx,
                  num: discord.Option(int)):
   await ctx.channel.purge(limit=num+1)
   await ctx.respond(f"成功刪除 {num} 則訊息", delete_after=3)
+
+
 
 @bot.command(name="updatelog")
 async def _log(ctx):
@@ -156,13 +150,8 @@ async def _log(ctx):
   await ctx.respond(embed=embed)
 
 
+
 SelectOption = discord.SelectOption
-
-
-
-
-
-
 
 async def get_data(location):
 
