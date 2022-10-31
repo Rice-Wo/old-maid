@@ -16,6 +16,9 @@ with open('setting.json', 'r', encoding = "utf-8") as setting:
 with open('Token.json', 'r', encoding = "utf-8") as token:
 	token = json.load(token)
 
+with open('chat.json', 'r', encoding = "utf-8") as chat:
+	chat = json.load(chat)
+
 
 
 @bot.event
@@ -37,6 +40,12 @@ async def on_message(msg):
     return
   elif msg.content == "test":
     await msg.channel.send("test!")
+  elif msg.content in chat['早安']['input']:
+    out = random.choice(chat['早安']['output'])
+    await msg.channel.send(out)
+  elif msg.content in chat['晚安']['input']:
+    out = random.choice(chat['晚安']['output'])
+    await msg.channel.send(out)
   
 
 
