@@ -54,7 +54,7 @@ def chat_response(input_string):
             for word in message:
                 if word in required_words:
                     required_score += 1
-                    print(required_score)
+                    
 
         # Amount of required words should match the required score
         if required_score == len(required_words):
@@ -68,7 +68,7 @@ def chat_response(input_string):
         # Add score to list
         score_list.append(response_score)
         # Debugging: Find the best phrase
-        print(response_score, response["user_input"])
+        # print(response_score, response["user_input"])
 
     # Find the best response and return it if they're not all 0
     best_response = max(score_list)
@@ -76,7 +76,7 @@ def chat_response(input_string):
 
     # If there is no good response, return a random one.
     if best_response != 0:
-        return chat_data[response_index]["bot_response"]
+        return random.choice(chat_data[response_index]["bot_response"])
     
     score_list = []
 
@@ -91,7 +91,7 @@ def chat_response(input_string):
             for word in split_message:
                 if word in required_words:
                     required_score += 1
-                    print(required_score)
+                    
 
         # Amount of required words should match the required score
         if required_score == len(required_words):

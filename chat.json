@@ -37,8 +37,14 @@
     },
     {
       "response_type": "question",
-      "user_input": ["你", "好"],
-      "bot_response": ["我很好"],
-      "required_words": ["你"]
+      "user_input": ["早", "安"],
+      "bot_response": ["早安", "早", "早安啊", "要咖啡嗎", "早安=w="],
+      "required_words": ["早", "安"]
+    },
+    {
+      "response_type": "question",
+      "user_input": ["晚", "安"],
+      "bot_response": ["晚安", "祝睡的安穩", "晚安啦", "要咖啡嗎:)", "晚安..."],
+      "required_words": ["晚", "安"]
     }
   ]
