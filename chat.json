@@ -37,7 +37,7 @@
     },
     {
       "response_type": "question",
-      "user_input": [""],
+      "user_input": ["蛤"],
       "bot_response": [
         "https://tenor.com/view/honkai-honkaiipmact3rd-honkaiimpact-gif-25643515"],
       "required_words": []
