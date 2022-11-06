@@ -28,5 +28,18 @@
       "user_input": ["我", "不", "知", "道", "窩"],
       "bot_response": ["https://tenor.com/view/%E7%AA%A9%E4%B8%8D%E7%9F%A5%E9%81%93-gif-19458071"],
       "required_words": ["不", "知", "道"]
+    },
+    {
+      "response_type": "question",
+      "user_input": ["hm", "hmm", "hmmm", "hmmmm"],
+      "bot_response": ["別想了。", "泥想什麼"],
+      "required_words": []
+    },
+    {
+      "response_type": "question",
+      "user_input": [""],
+      "bot_response": [
+        "https://tenor.com/view/honkai-honkaiipmact3rd-honkaiimpact-gif-25643515"],
+      "required_words": []
     }
   ]

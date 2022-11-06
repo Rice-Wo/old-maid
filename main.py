@@ -38,7 +38,7 @@ async def status():
 
 
 def chat_response(input_string):
-  message = re.split(r'\s+|[,;?!.-]\s*', input_string)
+  message = re.split(r'\s+|[,;?!.-:]\s*', input_string)
   unlist = "".join(message)
   split_message = []
   for i in unlist:
