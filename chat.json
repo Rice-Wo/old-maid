@@ -1,41 +1,5 @@
 [
     {
-      "response_type": "greeting",
-      "user_input": ["hello", "hi", "hey"],
-      "bot_response": "Hey there!",
-      "required_words": []
-    },
-    {
-      "response_type": "greeting",
-      "user_input": ["see you", "goodbye", "bye"],
-      "bot_response": "See you later!",
-      "required_words": []
-    },
-    {
-      "response_type": "greeting",
-      "user_input": ["nice", "to", "meet", "you"],
-      "bot_response": "The pleasure is all mine!",
-      "required_words": ["nice", "meet", "you"]
-    },
-    {
-      "response_type": "question",
-      "user_input": ["how", "to", "learn", "code", "coding", "apps"],
-      "bot_response": "Start by typing: 'How to learn coding' on Google.",
-      "required_words": ["learn", "code"]
-    },
-    {
-      "response_type": "question",
-      "user_input": ["refund", "how", "can", "I", "get"],
-      "bot_response": "We don't offer refunds for free education.",
-      "required_words": ["refund", "i"]
-    },
-    {
-      "response_type": "question",
-      "user_input": ["how", "are", "you"],
-      "bot_response": "I'm great! Thanks for asking.",
-      "required_words": ["how", "are", "you"]
-    },
-    {
       "response_type": "question",
       "user_input": ["早", "安"],
       "bot_response": ["早安", "早", "早安啊", "要咖啡嗎", "早安=w="],
@@ -46,5 +10,23 @@
       "user_input": ["晚", "安"],
       "bot_response": ["晚安", "祝睡的安穩", "晚安啦", "要咖啡嗎:)", "晚安..."],
       "required_words": ["晚", "安"]
+    },
+    {
+      "response_type": "question",
+      "user_input": ["你", "好"],
+      "bot_response": ["你好", "hi"],
+      "required_words": ["你", "好"]
+    },
+    {
+      "response_type": "question",
+      "user_input": ["霧", "子"],
+      "bot_response": ["https://tenor.com/view/kiriko-gif-26884813"],
+      "required_words": ["霧", "子"]
+    },
+    {
+      "response_type": "question",
+      "user_input": ["我", "不", "知", "道", "窩"],
+      "bot_response": ["https://tenor.com/view/%E7%AA%A9%E4%B8%8D%E7%9F%A5%E9%81%93-gif-19458071"],
+      "required_words": ["不", "知", "道"]
     }
   ]
