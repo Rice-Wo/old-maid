@@ -1,12 +1,11 @@
 import discord
-from discord import Embed
 from discord.ext import commands, tasks
 import os
 import json
 import random
 import asyncio
 import requests
-import re
+
 
 bot = discord.Bot(debug_guilds=[911190180260626453],status=discord.Status.do_not_disturb, intents = discord.Intents().all())
 
