@@ -113,9 +113,9 @@ async def _choice(ctx,
                   ques: discord.Option(str,"問題是什麼", name="問題"),
                   times: discord.Option(int, name="選項數", min_value=2, max_value=5, default=2)):
   list = []
+  embed = Embed()
 
   def ci(self, interaction: discord.Interaction):
-   
     for j in range(len(self.children)):
       value = self.children[j].value
       list.append(value)
@@ -131,7 +131,11 @@ async def _choice(ctx,
   class rcbutton(discord.ui.View): # Create a class called MyView that subclasses discord.ui.View
     @discord.ui.button(label="再選一次", style=discord.ButtonStyle.primary)
     async def button_callback(self, button, interaction):
-      await interaction.response.edit_message(embed=rc(ques, list), view=rcbutton())
+      await interaction.response.edit_message(embed=rc(ques, list), view=rcbutton(), ephemeral=True)
+
+    @discord.ui.button(label="公開結果", style=discord.ButtonStyle.primary)
+    async def button_callback(self, button, interaction):
+      await interaction.response.edit_message(embed=embed)
 
   class cimodal(discord.ui.Modal):
     def __init__(self, *args, **kwargs) -> None:
@@ -141,14 +145,14 @@ async def _choice(ctx,
           self.add_item(discord.ui.InputText(label=f"第 {i+1} 個選項"))        
 
     async def callback(self, interaction: discord.Interaction):
-        await interaction.response.send_message(embed=rc(ques, ci(self, interaction)), view=rcbutton())
+        await interaction.response.send_message(embed=rc(ques, ci(self, interaction)), view=rcbutton(), ephemeral=True)
 
   class cibutton(discord.ui.View):
       @discord.ui.button(label="按這填入選項")
       async def button_callback(self, button, interaction):
           await interaction.response.send_modal(cimodal(title="請輸入選項"))
   
-  await ctx.respond(view=cibutton())
+  await ctx.respond(view=cibutton(), ephemeral=True)
 
 
 
@@ -157,7 +161,7 @@ async def _choice(ctx,
 async def _clean(ctx,
                  num: discord.Option(int)):
   await ctx.channel.purge(limit=num+1)
-  await ctx.respond(f"成功刪除 {num} 則訊息", delete_after=3)
+  await ctx.respond(f"成功刪除 {num} 則訊息", ephemeral=True)
 
 
 
