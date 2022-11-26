@@ -1,31 +1,31 @@
 [
     {
       "response_type": "question",
-      "user_input": ["早", "安"],
+      "user_input": ["早安", "早"],
       "bot_response": ["早安", "早", "早安啊", "要咖啡嗎", "早安=w="],
       "required_words": ["早", "安"]
     },
     {
       "response_type": "question",
-      "user_input": ["晚", "安"],
+      "user_input": ["晚安"],
       "bot_response": ["晚安", "祝睡的安穩", "晚安啦", "要咖啡嗎:)", "晚安..."],
       "required_words": ["晚", "安"]
     },
     {
       "response_type": "question",
-      "user_input": ["你", "好"],
+      "user_input": ["你好"],
       "bot_response": ["你好", "hi"],
       "required_words": ["你", "好"]
     },
     {
       "response_type": "question",
-      "user_input": ["霧", "子"],
+      "user_input": ["霧子"],
       "bot_response": ["https://tenor.com/view/kiriko-gif-26884813"],
       "required_words": ["霧", "子"]
     },
     {
       "response_type": "question",
-      "user_input": ["我", "不", "知", "道", "窩"],
+      "user_input": ["我不知道", "窩不知道"],
       "bot_response": ["https://tenor.com/view/%E7%AA%A9%E4%B8%8D%E7%9F%A5%E9%81%93-gif-19458071"],
       "required_words": ["不", "知", "道"]
     },
