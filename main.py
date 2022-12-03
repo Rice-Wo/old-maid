@@ -5,6 +5,9 @@ import json
 import random
 import asyncio
 import requests
+from datetime import datetime,timezone,timedelta
+import time
+
 
 
 bot = discord.Bot(debug_guilds=[911190180260626453],status=discord.Status.do_not_disturb, intents = discord.Intents().all())
@@ -257,6 +260,28 @@ async def _weather(ctx):
   await ctx.respond(embed=embed, view=weather_select())
 
 
+@bot.command(name="user_info")  # create a user command for the supplied guilds
+async def user_info(ctx, member: discord.Member):  # user commands return the member
+    name = member
+    created = member.created_at.astimezone(timezone(timedelta(hours=8))).strftime("%Y-%m-%d %H:%M:%S")
+    join = member.joined_at.astimezone(timezone(timedelta(hours=8))).strftime("%Y-%m-%d %H:%M:%S")
+    created_time = int(time.mktime(time.strptime(created, "%Y-%m-%d %H:%M:%S")))
+    join_time = int(time.mktime(time.strptime(join, "%Y-%m-%d %H:%M:%S")))
+    avatar = member.avatar
+
+    embed=discord.Embed(title=name, color=member.color)
+    embed.set_thumbnail(url=avatar)
+    embed.add_field(name="帳號創建時間", value=f"<t:{created_time}:D>", inline=True)
+    embed.add_field(name="加入伺服器時間", value=f"<t:{join_time}:D>", inline=True)
+    
+    await ctx.respond(embed=embed)
+
+
+@bot.command(name="avatar")
+async def avatar(ctx, member:discord.Member):
+  avatar = member.avatar
+  await ctx.respond(f"{member}的頭貼:")
+  await ctx.send(f"{avatar}")
 
 
 
@@ -266,6 +291,28 @@ async def _weather(ctx):
 
 
 
+@bot.user_command(name="使用者資訊")  # create a user command for the supplied guilds
+async def user_info(ctx, member: discord.Member):  # user commands return the member
+    name = member
+    created = member.created_at.astimezone(timezone(timedelta(hours=8))).strftime("%Y-%m-%d %H:%M:%S")
+    join = member.joined_at.astimezone(timezone(timedelta(hours=8))).strftime("%Y-%m-%d %H:%M:%S")
+    created_time = int(time.mktime(time.strptime(created, "%Y-%m-%d %H:%M:%S")))
+    join_time = int(time.mktime(time.strptime(join, "%Y-%m-%d %H:%M:%S")))
+    avatar = member.avatar
+
+    embed=discord.Embed(title=name, color=member.color)
+    embed.set_thumbnail(url=avatar)
+    embed.add_field(name="帳號創建時間", value=f"<t:{created_time}:D>", inline=True)
+    embed.add_field(name="加入伺服器時間", value=f"<t:{join_time}:D>", inline=True)
+    
+    await ctx.respond(embed=embed)
+
+
+@bot.user_command(name="頭貼")
+async def avatar(ctx, member:discord.Member):
+  avatar = member.avatar
+  await ctx.respond(f"{member}的頭貼:")
+  await ctx.send(f"{avatar}")
 
 
 if __name__ ==  "__main__":
