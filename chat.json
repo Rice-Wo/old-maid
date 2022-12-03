@@ -10,5 +10,11 @@
       "user_input": ["晚安"],
       "bot_response": ["晚安", "祝睡的安穩", "晚安啦", "要咖啡嗎:)", "晚安..."],
       "required_words": ["晚", "安"]
+    },
+    {
+      "response_type": "question",
+      "user_input": ["聖誕節快樂", "聖誕節", "padoru", "Padoru"],
+      "bot_response": ["聖誕節快樂", "我沒有禮物不要看我", "Hashire sori yo Kaze no you ni Tsukimihara wo **Padoru Padoru**", "奔跑吧雪橇~如風一般~在月原上~"],
+      "required_words": ["晚", "安"]
     }
   ]

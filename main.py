@@ -48,10 +48,7 @@ def chat_response(input_string):
 @bot.event
 async def on_message(msg):
   if msg.author == bot.user:
-    return
-  elif msg.content == "test":
-    await msg.channel.send("test!")
-  
+    return  
   
   elif chat_response(msg.content):
     await msg.channel.send(chat_response(msg.content))
@@ -156,7 +153,7 @@ async def _choice(ctx,
 async def _clean(ctx,
                  num: discord.Option(int)):
   await ctx.channel.purge(limit=num+1)
-  await ctx.respond(f"成功刪除 {num} 則訊息", delete_after=3)
+  await ctx.respond(f"成功刪除 {num} 則訊息", ephemeral=True)
 
 
 
