@@ -270,7 +270,8 @@ async def user_info(ctx, member: discord.Member):  # user commands return the me
     avatar = member.avatar
 
     embed=discord.Embed(title=name, color=member.color)
-    embed.set_thumbnail(url=avatar)
+    if avatar:
+      embed.set_thumbnail(url=avatar)
     embed.add_field(name="帳號創建時間", value=f"<t:{created_time}:D>", inline=True)
     embed.add_field(name="加入伺服器時間", value=f"<t:{join_time}:D>", inline=True)
     
@@ -280,8 +281,11 @@ async def user_info(ctx, member: discord.Member):  # user commands return the me
 @bot.command(name="avatar")
 async def avatar(ctx, member:discord.Member):
   avatar = member.avatar
-  await ctx.respond(f"{member}的頭貼:")
-  await ctx.send(f"{avatar}")
+  if avatar:
+    await ctx.respond(f"{member}的頭貼:")
+    await ctx.send(f"{avatar}")
+  else:
+    await ctx.respond("這位使用者沒有頭貼")
 
 
 
@@ -301,7 +305,8 @@ async def user_info(ctx, member: discord.Member):  # user commands return the me
     avatar = member.avatar
 
     embed=discord.Embed(title=name, color=member.color)
-    embed.set_thumbnail(url=avatar)
+    if avatar:
+     embed.set_thumbnail(url=avatar)
     embed.add_field(name="帳號創建時間", value=f"<t:{created_time}:D>", inline=True)
     embed.add_field(name="加入伺服器時間", value=f"<t:{join_time}:D>", inline=True)
     
@@ -311,9 +316,11 @@ async def user_info(ctx, member: discord.Member):  # user commands return the me
 @bot.user_command(name="頭貼")
 async def avatar(ctx, member:discord.Member):
   avatar = member.avatar
-  await ctx.respond(f"{member}的頭貼:")
-  await ctx.send(f"{avatar}")
-
+  if avatar:
+    await ctx.respond(f"{member}的頭貼:")
+    await ctx.send(f"{avatar}")
+  else:
+    await ctx.respond("這位使用者沒有頭貼")
 
 if __name__ ==  "__main__":
   TOKEN = token['test']
