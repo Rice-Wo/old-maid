@@ -10,7 +10,7 @@ import time
 
 
 
-bot = discord.Bot(debug_guilds=[911190180260626453],status=discord.Status.do_not_disturb, intents = discord.Intents().all())
+bot = discord.Bot(status=discord.Status.do_not_disturb, intents = discord.Intents().all())
 
 
 with open('setting.json', 'r', encoding = "utf-8") as setting:
