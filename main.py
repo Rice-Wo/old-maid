@@ -323,5 +323,5 @@ async def avatar(ctx, member:discord.Member):
     await ctx.respond("這位使用者沒有頭貼")
 
 if __name__ ==  "__main__":
-  TOKEN = token['test']
+  TOKEN = token['TOKEN']
   bot.run(TOKEN)
