@@ -59,13 +59,9 @@ async def on_message(msg):
 
 
 
-@bot.command(name="test")
-async def _test(ctx):
-  if ctx.author.id != setting["rice"]:
-    await ctx.respond("您不是開發人員")
-    return
-  else:
-    await ctx.respond("i'm still alive :)")
+@bot.command(name="ping")
+async def _ping(ctx):
+  await ctx.respond(f"目前ping值為 {round(bot.latency * 1000)} ms")
 
 
 
@@ -288,9 +284,23 @@ async def avatar(ctx, member:discord.Member):
     await ctx.respond("這位使用者沒有頭貼")
 
 
-@bot.command(name="R6隨機幹員")
+@bot.command(name="r6隨機幹員")
 async def R6(ctx):
-  await ctx.respond()
+  def R6pick(side):
+    ans = random.choice(setting[side])
+    return ans
+  class MyView(discord.ui.View):
+    @discord.ui.button(label="攻擊方", row=0, style=discord.ButtonStyle.primary)
+    async def first_button_callback(self, button, interaction):
+        operator = R6pick("R6atk")
+        await interaction.response.send_message(operator)
+
+    @discord.ui.button(label="防守方", row=0, style=discord.ButtonStyle.primary)
+    async def second_button_callback(self, button, interaction):
+        operator = R6pick("R6def")
+        await interaction.response.send_message(operator)
+
+  await ctx.respond(view=MyView())
 
 
 
