@@ -286,7 +286,21 @@ async def avatar(ctx, member:discord.Member):
 
 @bot.command(name="r6隨機幹員")
 async def R6(ctx):
-  await ctx.respond()
+  def R6pick(side):
+    ans = random.choice(setting[side])
+    return ans
+  class MyView(discord.ui.View):
+    @discord.ui.button(label="攻擊方", row=0, style=discord.ButtonStyle.primary)
+    async def first_button_callback(self, button, interaction):
+        operator = R6pick("R6atk")
+        await interaction.response.send_message(operator)
+
+    @discord.ui.button(label="防守方", row=0, style=discord.ButtonStyle.primary)
+    async def second_button_callback(self, button, interaction):
+        operator = R6pick("R6def")
+        await interaction.response.send_message(operator)
+
+  await ctx.respond(view=MyView())
 
 
 
