@@ -10,9 +10,8 @@ import time
 import subprocess
 
 
+bot = discord.Bot(status=discord.Status.do_not_disturb, intents = discord.Intents().all())
 
-
-bot = discord.Bot(debug_guilds=[911190180260626453],status=discord.Status.do_not_disturb, intents = discord.Intents().all())
 
 
 with open('setting.json', 'r', encoding = "utf-8") as setting:
@@ -32,6 +31,7 @@ async def on_ready():
   print(f"{bot.user} is online")
   channel = bot.get_channel(setting['online'])
   await channel.send("女僕已上線")
+
   
 
 
@@ -68,6 +68,7 @@ async def _ping(ctx):
   await ctx.respond(f"目前ping值為 {round(bot.latency * 1000)} ms")
 
 
+
 def check_update():
     # Make a request to the GitHub API to check for updates
     response = requests.get("https://api.github.com/repos/Rice-Wo/Rice-Wo-maid/releases/latest")
@@ -94,7 +95,6 @@ async def update(ctx):
       subprocess.run(["python3", "update.py"])
     else:
       await ctx.respond("已經是最新版本", ephemeral=True)
-
 
 @bot.command(name="random")
 async def _random(ctx,
@@ -370,5 +370,5 @@ async def avatar(ctx, member:discord.Member):
 
 
 if __name__ ==  "__main__":
-  TOKEN = token['test']
+  TOKEN = token['TOKEN']
   bot.run(TOKEN)
