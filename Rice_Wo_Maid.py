@@ -24,13 +24,15 @@ with open('chat.json', 'r', encoding = "utf-8") as chat:
 	chat_data = json.load(chat)
 
 
+version = setting['version']
+
 
 @bot.event
 async def on_ready():
   status.start()
   print(f"{bot.user} is online")
   channel = bot.get_channel(setting['online'])
-  await channel.send("女僕已上線")
+  await channel.send(f"女僕已上線，目前版本 {version}")
 
   
 
