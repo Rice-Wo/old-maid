@@ -182,7 +182,7 @@ async def _choice(ctx,
 @discord.default_permissions(manage_messages=True)
 async def _clean(ctx,
                  num: discord.Option(int)):
-  await ctx.channel.purge(limit=num+1)
+  await ctx.channel.purge(limit=num)
   await ctx.respond(f"成功刪除 {num} 則訊息", ephemeral=True)
 
 
