@@ -10,9 +10,6 @@ import time
 import subprocess
 
 
-bot = discord.Bot(debug_guilds=[911190180260626453], status=discord.Status.do_not_disturb, intents = discord.Intents().all())
-
-
 
 with open('setting.json', 'r', encoding = "utf-8") as setting:
 	setting = json.load(setting)
@@ -22,6 +19,12 @@ with open('Token.json', 'r', encoding = "utf-8") as token:
 
 with open('chat.json', 'r', encoding = "utf-8") as chat:
 	chat_data = json.load(chat)
+
+
+if setting['version'].startswith("b"):
+  bot = discord.Bot(debug_guilds=[911190180260626453], status=discord.Status.do_not_disturb, intents = discord.Intents().all())
+else:
+  bot = discord.Bot(status=discord.Status.do_not_disturb, intents = discord.Intents().all())
 
 
 version = setting['version']
@@ -372,5 +375,5 @@ async def avatar(ctx, member:discord.Member):
 
 
 if __name__ ==  "__main__":
-  TOKEN = token['test']
+  TOKEN = token['TOKEN']
   bot.run(TOKEN)

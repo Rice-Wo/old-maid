@@ -8,18 +8,10 @@ import json
 with open('setting.json', 'r', encoding = "utf-8") as setting:
 	setting = json.load(setting)
 
-def check_update():
-    # Make a request to the GitHub API to check for updates
-    response = requests.get("https://api.github.com/repos/Rice-Wo/Rice-Wo-maid/releases/latest")
-    latest_release = response.json()
-    latest_version = latest_release["tag_name"]
 
-    # Compare the latest version to the current version
-    current_version = setting['version']
-    if latest_version > current_version:
-        return latest_release["zipball_url"]
-    else:
-        return None
+response = requests.get("https://api.github.com/repos/Rice-Wo/Rice-Wo-maid/releases/latest")
+latest_release = response.json()
+url = latest_release["zipball_url"]
 
 def download_update(url):
     # Download the update file
@@ -57,10 +49,8 @@ def apply_update(file_path):
     subprocess.run(["python3", "Rice_Wo_Maid.py"])
 
 # Example usage
-update_url = check_update()
-if update_url:
-    download_update(update_url)
-    apply_update("update.zip")
-    print("success")
-else:
-    print("The software is already up to date.")
+
+
+download_update(url)
+apply_update("update.zip")
+print("success")
