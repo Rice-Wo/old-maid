@@ -10,7 +10,7 @@ import time
 import subprocess
 
 
-bot = discord.Bot(debug_guilds=[911190180260626453], status=discord.Status.do_not_disturb, intents = discord.Intents().all())
+bot = discord.Bot(status=discord.Status.do_not_disturb, intents = discord.Intents().all())
 
 
 
@@ -372,5 +372,5 @@ async def avatar(ctx, member:discord.Member):
 
 
 if __name__ ==  "__main__":
-  TOKEN = token['test']
+  TOKEN = token['TOKEN']
   bot.run(TOKEN)
