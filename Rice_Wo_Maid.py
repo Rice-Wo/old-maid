@@ -3,15 +3,11 @@ from discord.ext import tasks
 import os
 import json
 import random
-import asyncio
 import requests
 from datetime import datetime,timezone,timedelta
 import time
 import subprocess
-
-
-bot = discord.Bot(status=discord.Status.do_not_disturb, intents = discord.Intents().all())
-
+import jieba
 
 
 with open('setting.json', 'r', encoding = "utf-8") as setting:
@@ -22,6 +18,12 @@ with open('Token.json', 'r', encoding = "utf-8") as token:
 
 with open('chat.json', 'r', encoding = "utf-8") as chat:
 	chat_data = json.load(chat)
+
+
+if setting['version'].startswith("b"):
+  bot = discord.Bot(debug_guilds=[911190180260626453], status=discord.Status.do_not_disturb, intents = discord.Intents().all())
+else:
+  bot = discord.Bot(status=discord.Status.do_not_disturb, intents = discord.Intents().all())
 
 
 version = setting['version']
@@ -46,10 +48,11 @@ async def status():
 
 
 def chat_response(input_string):
-  for response in chat_data:
-    if input_string in response['user_input']:
-      ans = random.choice(response['bot_response'])
-      return ans
+    words = ' '.join(jieba.cut(input_string, cut_all=False))
+    for response in chat_data:
+        if set(words.split()) & set(response['user_input']):
+            ans = random.choice(response['bot_response'])
+            return ans
 
 
 
@@ -372,5 +375,8 @@ async def avatar(ctx, member:discord.Member):
 
 
 if __name__ ==  "__main__":
+  text = '分詞系統測試成功'
+  a = ' '.join(jieba.cut(text, cut_all=False))
+  print(a)
   TOKEN = token['TOKEN']
   bot.run(TOKEN)
