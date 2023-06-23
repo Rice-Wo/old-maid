@@ -195,7 +195,7 @@ async def _clean(ctx,
 
 
 
-@bot.command(name="updatelog")
+@bot.command(name="更新日誌updatelog") #更新日誌
 async def _log(ctx):
   with open("update.txt", "r", encoding='utf8') as f:
           word = f.read()
@@ -205,7 +205,7 @@ async def _log(ctx):
   view = discord.ui.View()
   view.add_item(button)
     
-  embed=discord.Embed(title="更新日誌", description=word, color=0x0433ff)
+  embed=discord.Embed(description=word, color=0x0433ff)
   await ctx.respond(embed=embed, view=view)
 
 
