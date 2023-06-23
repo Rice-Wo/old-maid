@@ -3,7 +3,15 @@ import os
 import json
 import requests
 import discord
+import logging.config
 
+
+with open('log_config.json', "r", encoding='utf-8') as f:
+    log = json.load(f)
+
+#log設定
+logging.config.dictConfig(log)
+logger = logging.getLogger()
 # 定義全域變數
 main_script_path = os.path.abspath(sys.argv[0])
 main_script_directory = os.path.dirname(main_script_path)
@@ -28,7 +36,7 @@ async def get_data(location):
   }
 
   response = requests.get(url, params=params)
-  print(response.status_code)
+  logging.info(f'中央氣象局資料狀態碼: {response.status_code}')
 
   if response.status_code == 200:
       # print(response.text)
@@ -52,7 +60,7 @@ async def get_data(location):
       embed.set_footer(text="以上資料由中央氣象局提供")
            
   else:
-    print("Can't get data!")
+    logging.warning("Can't get data!")
     embed=discord.Embed(title=f"錯誤!", description=f"無法取得資料", color = 0xff0000)
     embed.set_footer(text="請稍後再試或是聯繫 稻禾Rice_Wo#3299")
   return embed
@@ -80,4 +88,5 @@ def changeLog():
             output = ("该项目尚未进行任何发布。")
     else:
         output = ("请求失败，错误代码：", response.status_code)
+        logging.warning(output)
     return output

@@ -10,7 +10,6 @@
     "handlers": {
       "file_handler": {
         "class": "logging.FileHandler",
-        "level": "DEBUG",
         "formatter": "standard",
         "filename": "log_file.log",
         "mode": "w"
@@ -21,7 +20,7 @@
       }
     },
     "root": {
-      "level": "DEBUG",
+      "level": "INFO",
       "handlers": ["file_handler", "console_handler"]
     }
   }
