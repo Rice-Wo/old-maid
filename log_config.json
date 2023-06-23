@@ -1,0 +1,28 @@
+{
+    "version": 1,
+    "disable_existing_loggers": false,
+    "formatters": {
+      "standard": {
+        "format": "%(asctime)s [%(levelname)s] : %(message)s",
+        "datefmt": "%Y-%m-%d %H:%M:%S"
+      }
+    },
+    "handlers": {
+      "file_handler": {
+        "class": "logging.FileHandler",
+        "level": "DEBUG",
+        "formatter": "standard",
+        "filename": "log_file.log",
+        "mode": "w"
+      },
+      "console_handler": {
+        "class": "logging.StreamHandler",
+        "formatter": "standard"
+      }
+    },
+    "root": {
+      "level": "DEBUG",
+      "handlers": ["file_handler", "console_handler"]
+    }
+  }
+  

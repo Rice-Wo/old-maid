@@ -1,17 +1,22 @@
 import discord
 from discord.ext import tasks, commands
-import json
 import random
 import requests
 from datetime import timezone,timedelta
 import time
 import subprocess
 import jieba
-from fun import readJson, writeJson
+from fun import readJson, writeJson, get_data, changeLog
+import logging.config
+
+
+
+#log設定
+logging.config.dictConfig(readJson('log_config'))
+logger = logging.getLogger()
 
 
 setting = readJson('setting')
-
 
 if setting['version'].endswith("alpha"):
   bot = discord.Bot(debug_guilds=[911190180260626453],intents = discord.Intents().all())
@@ -19,17 +24,14 @@ else:
   bot = discord.Bot(intents = discord.Intents().all())
 
 
-version = setting['version']
-
 
 @bot.event
 async def on_ready():
   status.start()
   print(f"{bot.user} is online")
   channel = bot.get_channel(setting['online'])
-  await channel.send(f"女僕已上線，目前版本 {version}")
-
-  
+  version = setting['version']
+  await channel.send(f"女僕已上線，目前版本 {version}")  
 
 
 @tasks.loop(seconds=5)
@@ -45,8 +47,6 @@ def chat_response(input_string):
         if set(words.split()) & set(response['user_input']):
             ans = random.choice(response['bot_response'])
             return ans
-
-
 
 
 @bot.event
@@ -73,7 +73,6 @@ async def on_application_command_error(ctx: discord.ApplicationContext, error: d
 @bot.command(name="ping")
 async def _ping(ctx):
   await ctx.respond(f"目前ping值為 {round(bot.latency * 1000)} ms")
-
 
 
 def check_update():
@@ -197,63 +196,20 @@ async def _clean(ctx,
 
 @bot.command(name="更新日誌updatelog") #更新日誌
 async def _log(ctx):
-  with open("update.txt", "r", encoding='utf8') as f:
-          word = f.read()
 
   button = discord.ui.Button(label="更新日誌", url="https://discord.gg/s6G9nsgeNz")
 
   view = discord.ui.View()
   view.add_item(button)
     
-  embed=discord.Embed(description=word, color=0x0433ff)
+  embed=discord.Embed(description=changeLog(), color=0x0433ff)
   await ctx.respond(embed=embed, view=view)
 
 
 
 SelectOption = discord.SelectOption
 
-async def get_data(location):
-  token = readJson('Token')
-  url = "https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-C0032-001"
-  params = {
-      "Authorization": token['CWB-TOKEN'],
-      "locationName":location
-      
-  }
 
-  response = requests.get(url, params=params)
-  print(response.status_code)
-
-  if response.status_code == 200:
-      # print(response.text)
-      data = json.loads(response.text)
-      
-      
-      
-      locationName = data["records"]["location"][0]["locationName"]
-      weather_elements = data["records"]["location"][0]["weatherElement"]
-      start_time = weather_elements[0]["time"][0]["startTime"]
-      end_time = weather_elements[0]["time"][0]["endTime"]
-      weather_state = weather_elements[0]["time"][0]["parameter"]["parameterName"]
-      rain_prob = weather_elements[1]["time"][0]["parameter"]["parameterName"]
-      min_tem = weather_elements[2]["time"][0]["parameter"]["parameterName"]
-      comfort = weather_elements[3]["time"][0]["parameter"]["parameterName"]
-      max_tem = weather_elements[4]["time"][0]["parameter"]["parameterName"]
-
-      embed=discord.Embed(title=f"{locationName} 的天氣預報", description=f"本預報時段為 {start_time} 到 {end_time}")
-      embed.add_field(name="最高溫", value=f"{max_tem} °C" , inline=True)
-      embed.add_field(name="最低溫", value=f"{min_tem} °C" , inline=True)
-      embed.add_field(name="降雨機率", value=f"{rain_prob} %", inline=False)
-      embed.add_field(name=weather_state, value=comfort, inline=True)
-      embed.set_footer(text="以上資料由中央氣象局提供")
-      
-      
-
-  else:
-    print("Can't get data!")
-    embed=discord.Embed(title=f"錯誤!", description=f"無法取得資料", color = 0xff0000)
-    embed.set_footer(text="請稍後再試或是聯繫 稻禾Rice_Wo#3299")
-  return embed
 
 class weather_select(discord.ui.View):
   @discord.ui.select(
