@@ -1,23 +1,16 @@
 import discord
-from discord.ext import tasks
-import os
+from discord.ext import tasks, commands
 import json
 import random
 import requests
-from datetime import datetime,timezone,timedelta
+from datetime import timezone,timedelta
 import time
 import subprocess
 import jieba
+from fun import readJson, writeJson
 
 
-with open('setting.json', 'r', encoding = "utf-8") as setting:
-	setting = json.load(setting)
-
-with open('Token.json', 'r', encoding = "utf-8") as token:
-	token = json.load(token)
-
-with open('chat.json', 'r', encoding = "utf-8") as chat:
-	chat_data = json.load(chat)
+setting = readJson('setting')
 
 
 if setting['version'].startswith("b"):
@@ -43,8 +36,7 @@ async def on_ready():
 async def status():
   global chat_data
   await bot.change_presence(status=discord.Status.do_not_disturb,activity=discord.Game(random.choice(setting["status"])))
-  with open('chat.json', 'r', encoding = "utf-8") as chat:
-	  chat_data = json.load(chat)
+  chat_data = readJson('chat')
 
 
 def chat_response(input_string):
@@ -66,6 +58,16 @@ async def on_message(msg):
     await msg.channel.send(chat_response(msg.content))
   
 
+@bot.command()
+@commands.is_owner()
+async def test(ctx):
+   await ctx.respond('成功')
+@test.error
+async def on_application_command_error(ctx: discord.ApplicationContext, error: discord.DiscordException):
+  if isinstance(error, commands.NotOwner):
+        await ctx.respond("Sorry, only the bot owner can use this command!")
+  else:
+      raise error
 
 
 @bot.command(name="ping")
@@ -88,6 +90,7 @@ def check_update():
         return None
 
 @bot.command(name="restart", description="開發人員專用，只適用於Linux")
+@commands.is_owner()
 async def update(ctx):
   if ctx.author.id != setting["rice"]:
     await ctx.respond("您不是開發人員")
@@ -210,47 +213,47 @@ async def _log(ctx):
 SelectOption = discord.SelectOption
 
 async def get_data(location):
+  token = readJson('Token')
+  url = "https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-C0032-001"
+  params = {
+      "Authorization": token['CWB-TOKEN'],
+      "locationName":location
+      
+  }
 
-    url = "https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-C0032-001"
-    params = {
-        "Authorization": token['CWB-TOKEN'],
-        "locationName":location
-        
-    }
+  response = requests.get(url, params=params)
+  print(response.status_code)
 
-    response = requests.get(url, params=params)
-    print(response.status_code)
+  if response.status_code == 200:
+      # print(response.text)
+      data = json.loads(response.text)
+      
+      
+      
+      locationName = data["records"]["location"][0]["locationName"]
+      weather_elements = data["records"]["location"][0]["weatherElement"]
+      start_time = weather_elements[0]["time"][0]["startTime"]
+      end_time = weather_elements[0]["time"][0]["endTime"]
+      weather_state = weather_elements[0]["time"][0]["parameter"]["parameterName"]
+      rain_prob = weather_elements[1]["time"][0]["parameter"]["parameterName"]
+      min_tem = weather_elements[2]["time"][0]["parameter"]["parameterName"]
+      comfort = weather_elements[3]["time"][0]["parameter"]["parameterName"]
+      max_tem = weather_elements[4]["time"][0]["parameter"]["parameterName"]
 
-    if response.status_code == 200:
-        # print(response.text)
-        data = json.loads(response.text)
-        
-       
-        
-        locationName = data["records"]["location"][0]["locationName"]
-        weather_elements = data["records"]["location"][0]["weatherElement"]
-        start_time = weather_elements[0]["time"][0]["startTime"]
-        end_time = weather_elements[0]["time"][0]["endTime"]
-        weather_state = weather_elements[0]["time"][0]["parameter"]["parameterName"]
-        rain_prob = weather_elements[1]["time"][0]["parameter"]["parameterName"]
-        min_tem = weather_elements[2]["time"][0]["parameter"]["parameterName"]
-        comfort = weather_elements[3]["time"][0]["parameter"]["parameterName"]
-        max_tem = weather_elements[4]["time"][0]["parameter"]["parameterName"]
+      embed=discord.Embed(title=f"{locationName} 的天氣預報", description=f"本預報時段為 {start_time} 到 {end_time}")
+      embed.add_field(name="最高溫", value=f"{max_tem} °C" , inline=True)
+      embed.add_field(name="最低溫", value=f"{min_tem} °C" , inline=True)
+      embed.add_field(name="降雨機率", value=f"{rain_prob} %", inline=False)
+      embed.add_field(name=weather_state, value=comfort, inline=True)
+      embed.set_footer(text="以上資料由中央氣象局提供")
+      
+      
 
-        embed=discord.Embed(title=f"{locationName} 的天氣預報", description=f"本預報時段為 {start_time} 到 {end_time}")
-        embed.add_field(name="最高溫", value=f"{max_tem} °C" , inline=True)
-        embed.add_field(name="最低溫", value=f"{min_tem} °C" , inline=True)
-        embed.add_field(name="降雨機率", value=f"{rain_prob} %", inline=False)
-        embed.add_field(name=weather_state, value=comfort, inline=True)
-        embed.set_footer(text="以上資料由中央氣象局提供")
-        
-        
-
-    else:
-      print("Can't get data!")
-      embed=discord.Embed(title=f"錯誤!", description=f"無法取得資料", color = 0xff0000)
-      embed.set_footer(text="請稍後再試或是聯繫 稻禾Rice_Wo#3299")
-    return embed
+  else:
+    print("Can't get data!")
+    embed=discord.Embed(title=f"錯誤!", description=f"無法取得資料", color = 0xff0000)
+    embed.set_footer(text="請稍後再試或是聯繫 稻禾Rice_Wo#3299")
+  return embed
 
 class weather_select(discord.ui.View):
   @discord.ui.select(
@@ -378,5 +381,6 @@ if __name__ ==  "__main__":
   text = '分詞系統測試成功'
   a = ' '.join(jieba.cut(text, cut_all=False))
   print(a)
+  token = readJson('token')
   TOKEN = token['TOKEN']
   bot.run(TOKEN)
