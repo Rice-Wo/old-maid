@@ -13,10 +13,10 @@ from fun import readJson, writeJson
 setting = readJson('setting')
 
 
-if setting['version'].startswith("b"):
-  bot = discord.Bot(debug_guilds=[911190180260626453], status=discord.Status.do_not_disturb, intents = discord.Intents().all())
+if setting['version'].endswith("alpha"):
+  bot = discord.Bot(debug_guilds=[911190180260626453],intents = discord.Intents().all())
 else:
-  bot = discord.Bot(status=discord.Status.do_not_disturb, intents = discord.Intents().all())
+  bot = discord.Bot(intents = discord.Intents().all())
 
 
 version = setting['version']
