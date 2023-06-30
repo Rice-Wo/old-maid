@@ -19,13 +19,14 @@ logger = logging.getLogger()
 
 bot = discord.Bot(status=discord.Status.do_not_disturb, intents = discord.Intents().all())
 
-
+setting = readJson('setting')
 
 @bot.event
 async def on_ready():
   status.start()
   logging(f"{bot.user} is online")
   channel = bot.get_channel(setting['online'])
+  version = setting['version']
   await channel.send(f"女僕已上線，目前版本 {version}")
 
 
