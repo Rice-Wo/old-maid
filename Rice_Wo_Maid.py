@@ -20,10 +20,8 @@ with open('chat.json', 'r', encoding = "utf-8") as chat:
 	chat_data = json.load(chat)
 
 
-if setting['version'].startswith("b"):
-  bot = discord.Bot(debug_guilds=[911190180260626453], status=discord.Status.do_not_disturb, intents = discord.Intents().all())
-else:
-  bot = discord.Bot(status=discord.Status.do_not_disturb, intents = discord.Intents().all())
+
+bot = discord.Bot(status=discord.Status.do_not_disturb, intents = discord.Intents().all())
 
 
 version = setting['version']
@@ -32,9 +30,10 @@ version = setting['version']
 @bot.event
 async def on_ready():
   status.start()
-  print(f"{bot.user} is online")
-  channel = bot.get_channel(setting['online'])
-  await channel.send(f"女僕已上線，目前版本 {version}")
+  print(f"{bot.user} is online version:{version}")
+  channel = bot.get_channel(token['online'])
+  if channel:
+    await channel.send(f"女僕已上線，目前版本 {version}")
 
   
 
@@ -89,7 +88,7 @@ def check_update():
 
 @bot.command(name="restart", description="開發人員專用，只適用於Linux")
 async def update(ctx):
-  if ctx.author.id != setting["rice"]:
+  if ctx.author.id != token["rice"]:
     await ctx.respond("您不是開發人員")
     return
   else:
