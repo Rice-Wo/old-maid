@@ -16,22 +16,17 @@ logging.config.dictConfig(readJson('log_config'))
 logger = logging.getLogger()
 
 
-setting = readJson('setting')
 
-if setting['version'].endswith("alpha"):
-  bot = discord.Bot(debug_guilds=[911190180260626453],intents = discord.Intents().all())
-else:
-  bot = discord.Bot(intents = discord.Intents().all())
+bot = discord.Bot(status=discord.Status.do_not_disturb, intents = discord.Intents().all())
 
 
 
 @bot.event
 async def on_ready():
   status.start()
-  logging.info(f"{bot.user} is online")
+  logging(f"{bot.user} is online")
   channel = bot.get_channel(setting['online'])
-  version = setting['version']
-  await channel.send(f"女僕已上線，目前版本 {version}")  
+  await channel.send(f"女僕已上線，目前版本 {version}")
 
 
 @tasks.loop(seconds=5)
@@ -91,7 +86,7 @@ def check_update():
 @bot.command(name="restart", description="開發人員專用，只適用於Linux")
 @commands.is_owner()
 async def update(ctx):
-  if ctx.author.id != setting["rice"]:
+  if ctx.author.id != token["rice"]:
     await ctx.respond("您不是開發人員")
     return
   else:
