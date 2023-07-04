@@ -1,5 +1,8 @@
 # 稻禾專用女僕
 
+## 
+- [ ] 21點
+- [ ] 原神抽卡
 ## 貢獻
 
 - [pycord API](https://github.com/Pycord-Development/pycord) : 作為Discord Bot 的框架   
