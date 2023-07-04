@@ -24,8 +24,9 @@ setting = readJson('setting')
 @bot.event
 async def on_ready():
   status.start()
-  logging(f"{bot.user} is online")
-  channel = bot.get_channel(setting['online'])
+  logging.info(f"{bot.user} is online,current {version}")
+  Token = readJson('Token')
+  channel = bot.get_channel(Token['online'])
   version = setting['version']
   await channel.send(f"女僕已上線，目前版本 {version}")
 
