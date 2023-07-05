@@ -55,7 +55,7 @@ async def on_message(msg):
     await msg.channel.send(chat_response(msg.content))
   
 
-@bot.command()
+@bot.command(name="test測試")
 @commands.is_owner()
 async def test(ctx):
    await ctx.respond('成功')
@@ -67,23 +67,12 @@ async def on_application_command_error(ctx: discord.ApplicationContext, error: d
       raise error
 
 
-@bot.command(name="ping")
-async def _ping(ctx):
+@bot.command(name="ping延遲", description='回傳機器人ping值')
+async def ping(ctx):
   await ctx.respond(f"目前ping值為 {round(bot.latency * 1000)} ms")
 
 
-def check_update():
-    # Make a request to the GitHub API to check for updates
-    response = requests.get("https://api.github.com/repos/Rice-Wo/Rice-Wo-maid/releases/latest")
-    latest_release = response.json()
-    latest_version = latest_release["tag_name"]
 
-    # Compare the latest version to the current version
-    current_version = setting['version']
-    if latest_version > current_version:
-        return "有新版本，開始更新"
-    else:
-        return None
 
 @bot.command(name="restart", description="開發人員專用，只適用於Linux")
 @commands.is_owner()
@@ -92,13 +81,10 @@ async def update(ctx):
     await ctx.respond("您不是開發人員")
     return
   else:
-    if check_update():
-      await ctx.respond("執行成功", ephemeral=True)
-      channel = bot.get_channel(setting['online'])
-      await channel.send("正在關閉女僕")
-      subprocess.run(["python3", "update.py"])
-    else:
-      await ctx.respond("已經是最新版本", ephemeral=True)
+    await ctx.respond("執行成功", ephemeral=True)
+    channel = bot.get_channel(setting['online'])
+    await channel.send("正在關閉女僕")
+    subprocess.run(["python3", "update.py"])
 
 @bot.command(name="random")
 async def _random(ctx,
