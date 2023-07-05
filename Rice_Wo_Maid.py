@@ -53,16 +53,37 @@ async def on_message(msg):
   
   elif chat_response(msg.content):
     await msg.channel.send(chat_response(msg.content))
-  
 
-@bot.command(name="test測試")
+token = readJson('Token')
+guild_ids = token['server']
+
+@bot.command(name="test測試", guild_ids=guild_ids)
 @commands.is_owner()
 async def test(ctx):
    await ctx.respond('成功')
 @test.error
 async def on_application_command_error(ctx: discord.ApplicationContext, error: discord.DiscordException):
   if isinstance(error, commands.NotOwner):
-        await ctx.respond("Sorry, only the bot owner can use this command!")
+        await ctx.respond("只有機器人擁有者有權限執行此指令")
+  else:
+      raise error
+
+
+@bot.command(name="restart", description="開發人員專用，只適用於Linux", guild_ids=guild_ids)
+@commands.is_owner()
+async def restart(ctx):
+  if ctx.author.id != token["rice"]:
+    await ctx.respond("您不是開發人員")
+    return
+  else:
+    await ctx.respond("執行成功", ephemeral=True)
+    channel = bot.get_channel(setting['online'])
+    await channel.send("正在關閉女僕")
+    subprocess.run(["python3", "update.py"])
+@restart.error
+async def on_application_command_eeeor(ctx: discord.ApplicationContext, error: discord.DiscordException):
+  if isinstance(error, commands.NotOwner):
+        await ctx.respond("只有機器人擁有者有權限執行此指令")
   else:
       raise error
 
@@ -72,19 +93,6 @@ async def ping(ctx):
   await ctx.respond(f"目前ping值為 {round(bot.latency * 1000)} ms")
 
 
-
-
-@bot.command(name="restart", description="開發人員專用，只適用於Linux")
-@commands.is_owner()
-async def update(ctx):
-  if ctx.author.id != token["rice"]:
-    await ctx.respond("您不是開發人員")
-    return
-  else:
-    await ctx.respond("執行成功", ephemeral=True)
-    channel = bot.get_channel(setting['online'])
-    await channel.send("正在關閉女僕")
-    subprocess.run(["python3", "update.py"])
 
 @bot.command(name="random")
 async def _random(ctx,
