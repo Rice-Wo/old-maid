@@ -5,13 +5,13 @@ import requests
 import discord
 import logging.config
 
-
+#logging設定
 with open('log_config.json', "r", encoding='utf-8') as f:
     log = json.load(f)
-
-#log設定
 logging.config.dictConfig(log)
 logger = logging.getLogger()
+
+
 # 定義全域變數
 main_script_path = os.path.abspath(sys.argv[0])
 main_script_directory = os.path.dirname(main_script_path)

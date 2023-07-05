@@ -12,7 +12,8 @@
         "class": "logging.FileHandler",
         "formatter": "standard",
         "filename": "log_file.log",
-        "mode": "w"
+        "mode": "w",
+        "encoding": "utf-8"
       },
       "console_handler": {
         "class": "logging.StreamHandler",
