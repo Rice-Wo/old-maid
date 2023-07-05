@@ -65,28 +65,18 @@ async def get_data(location):
     embed.set_footer(text="請稍後再試或是聯繫 稻禾Rice_Wo#3299")
   return embed
 
-def changeLog():
-    base_url = "https://api.github.com"
-    owner = "Rice-Wo"
-    repo = "Rice-Wo-maid"
-    releases_url = f"{base_url}/repos/{owner}/{repo}/releases"
 
-    response = requests.get(releases_url)
-    releases = response.json()
+def changeLog():
+    response = requests.get("https://api.github.com/repos/Rice-Wo/Rice-Wo-maid/releases/latest")
+    latest_release = response.json()
 
     if response.status_code == 200:
-        if releases:
-            # 获取最新发布的信息
-            latest_release = releases[0]
-            
-            # 获取最新发布的更新日志
+        if not latest_release.get("prerelease"):
             changelog = latest_release["body"]
-            version =  latest_release["tag_name"]
-
-            output = (f'# {version} \n{changelog}')            
+            version = latest_release["tag_name"]
+            output = f'# {version} \n{changelog}'
         else:
-            output = ("该项目尚未进行任何发布。")
+            print("最新发布为预发布版本。")
     else:
-        output = ("请求失败，错误代码：", response.status_code)
-        logging.warning(output)
+        print("无法获取最新发布信息。")
     return output

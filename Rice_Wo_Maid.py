@@ -64,7 +64,7 @@ async def test(ctx):
 @test.error
 async def on_application_command_error(ctx: discord.ApplicationContext, error: discord.DiscordException):
   if isinstance(error, commands.NotOwner):
-        await ctx.respond("只有機器人擁有者有權限執行此指令")
+        await ctx.respond("只有機器人擁有者有權限執行此指令", ephemeral=True)
   else:
       raise error
 
@@ -83,7 +83,7 @@ async def restart(ctx):
 @restart.error
 async def on_application_command_eeeor(ctx: discord.ApplicationContext, error: discord.DiscordException):
   if isinstance(error, commands.NotOwner):
-        await ctx.respond("只有機器人擁有者有權限執行此指令")
+        await ctx.respond("只有機器人擁有者有權限執行此指令", ephemeral=True)
   else:
       raise error
 
@@ -260,7 +260,7 @@ async def user_info(ctx, member: discord.Member):  # user commands return the me
     await ctx.respond(embed=embed)
 
 
-@bot.command(name="avatar")
+@bot.command(name="avatar頭貼")
 async def avatar(ctx, member:discord.Member):
   avatar = member.avatar
   if avatar:
@@ -276,7 +276,9 @@ async def avatar(ctx, member:discord.Member):
 
 
 
-
+'''
+使用者指令們:)
+'''
 
 @bot.user_command(name="使用者資訊")  # create a user command for the supplied guilds
 async def user_info(ctx, member: discord.Member):  # user commands return the member
@@ -307,7 +309,7 @@ async def avatar(ctx, member:discord.Member):
 
 
 
-if __name__ ==  "__main__":
+if __name__ ==  "__main__": #執行機器人
   text = '分詞系統測試成功'
   a = ' '.join(jieba.cut(text, cut_all=False))
   print(a)
