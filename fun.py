@@ -16,18 +16,20 @@ logger = logging.getLogger()
 main_script_path = os.path.abspath(sys.argv[0])
 main_script_directory = os.path.dirname(main_script_path)
 
-def writeJson(file, item):
+def writeJson(file, item): #JSON寫入
     file_path = os.path.join(main_script_directory, file + '.json')
     with open(file_path, "w+") as f:
         f.write(json.dumps(item, ensure_ascii=False, indent=4))
 
-def readJson(file):
+
+def readJson(file): #JSON讀取
     file_path = os.path.join(main_script_directory, file + '.json')
     with open(file_path, "r", encoding='utf-8') as f:
         data = json.load(f)
     return data
 
-async def get_data(location):
+
+async def get_data(location): #取得天氣預報資料
   token = readJson('Token')
   url = "https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-C0032-001"
   params = {
@@ -66,7 +68,42 @@ async def get_data(location):
   return embed
 
 
-def changeLog():
+class weather_select(discord.ui.View): #天氣選單
+  SelectOption = discord.SelectOption
+  @discord.ui.select(
+    placeholder="地區",
+    options=[
+    SelectOption(label="宜蘭縣", description='宜蘭縣預報'),
+    SelectOption(label="花蓮縣", description='花蓮縣預報'),
+    SelectOption(label="臺東縣", description='臺東縣預報'),
+    SelectOption(label="澎湖縣", description='澎湖縣預報'),
+    SelectOption(label="金門縣", description='金門縣預報'),
+    SelectOption(label="連江縣", description='連江縣預報'),
+    SelectOption(label="臺北市", description='臺北市預報'),
+    SelectOption(label="新北市", description='新北市預報'),
+    SelectOption(label="桃園市", description='桃園市預報'),
+    SelectOption(label="臺中市", description='臺中市預報'),
+    SelectOption(label="臺南市", description='臺南市預報'),
+    SelectOption(label="高雄市", description='高雄市預報'),
+    SelectOption(label="基隆市", description='基隆市預報'),
+    SelectOption(label="新竹縣", description='新竹縣預報'),
+    SelectOption(label="新竹市", description='新竹市預報'),
+    SelectOption(label="苗栗縣", description='苗栗縣預報'),
+    SelectOption(label="彰化縣", description='彰化縣預報'),
+    SelectOption(label="南投縣", description='南投縣預報'),
+    SelectOption(label="雲林縣", description='雲林縣預報'),
+    SelectOption(label="嘉義縣", description='嘉義縣預報'),
+    SelectOption(label="嘉義市", description='嘉義市預報'),
+    SelectOption(label="屏東縣", description='屏東縣預報')          
+  ],
+  custom_id='weather'
+  )
+  async def select_callback(self, select, interaction):
+    data = await get_data(select.values[0]) 
+    await interaction.response.edit_message(embed=data, view=weather_select())
+
+
+def changeLog(): #取得更新內容
     response = requests.get("https://api.github.com/repos/Rice-Wo/Rice-Wo-maid/releases/latest")
     latest_release = response.json()
 

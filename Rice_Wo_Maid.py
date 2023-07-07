@@ -6,7 +6,7 @@ from datetime import timezone,timedelta
 import time
 import subprocess
 import jieba
-from fun import readJson, writeJson, get_data, changeLog
+from fun import readJson, writeJson, changeLog, weather_select
 import logging.config
 
 
@@ -57,7 +57,7 @@ async def on_message(msg):
 token = readJson('Token')
 guild_ids = token['server']
 
-@bot.command(name="test測試", guild_ids=guild_ids)
+@bot.command(name="test測試", description="測試指令功能用", guild_ids=guild_ids)
 @commands.is_owner()
 async def test(ctx):
    await ctx.respond('成功')
@@ -69,17 +69,13 @@ async def on_application_command_error(ctx: discord.ApplicationContext, error: d
       raise error
 
 
-@bot.command(name="restart", description="開發人員專用，只適用於Linux", guild_ids=guild_ids)
+@bot.command(name="restart重新啟動", description="重啟機器人並下載最新檔案，只適用於Linux", guild_ids=guild_ids)
 @commands.is_owner()
 async def restart(ctx):
-  if ctx.author.id != token["rice"]:
-    await ctx.respond("您不是開發人員")
-    return
-  else:
-    await ctx.respond("執行成功", ephemeral=True)
-    channel = bot.get_channel(setting['online'])
-    await channel.send("正在關閉女僕")
-    subprocess.run(["python3", "update.py"])
+  await ctx.respond("執行成功", ephemeral=True)
+  channel = bot.get_channel(setting['online'])
+  await channel.send("正在關閉女僕")
+  subprocess.run(["python3", "update.py"])
 @restart.error
 async def on_application_command_eeeor(ctx: discord.ApplicationContext, error: discord.DiscordException):
   if isinstance(error, commands.NotOwner):
@@ -94,8 +90,8 @@ async def ping(ctx):
 
 
 
-@bot.command(name="random")
-async def _random(ctx,
+@bot.command(name="random抽籤", description='從指定數字範圍中抽出指定數量的號碼')
+async def Random(ctx,
                   最大值: discord.Option(int, min_value=-1000, max_value=1000),
                   最小值: discord.Option(int, min_value=-1000, max_value=1000),
                   times: discord.Option(int, name="抽幾次", min_value=1, max_value=10, default=1)):
@@ -132,7 +128,7 @@ async def _random(ctx,
 
 
 
-@bot.command(name="choice",description="幫你從兩個到五個選項中選一個")
+@bot.command(name="choice選擇", description="幫你從兩個到五個選項中選一個")
 async def _choice(ctx,
                   ques: discord.Option(str,"問題是什麼", name="問題"),
                   times: discord.Option(int, name="選項數", min_value=2, max_value=5, default=2)):
@@ -176,16 +172,16 @@ async def _choice(ctx,
 
 
 
-@bot.command(name="clean",description="一次性刪掉多條訊息")
+@bot.command(name="clean清除訊息",description="一次性刪掉多條訊息")
 @discord.default_permissions(manage_messages=True)
-async def _clean(ctx,
-                 num: discord.Option(int)):
+async def clean(ctx,
+                num: discord.Option(int)):
   await ctx.channel.purge(limit=num)
   await ctx.respond(f"成功刪除 {num} 則訊息", ephemeral=True)
 
 
 
-@bot.command(name="更新日誌updatelog") #更新日誌
+@bot.command(name="updatelog更新日誌", description="取得最新版本的更新內容") #更新日誌
 async def _log(ctx):
 
   button = discord.ui.Button(label="更新日誌", url="https://discord.gg/s6G9nsgeNz")
@@ -197,46 +193,7 @@ async def _log(ctx):
   await ctx.respond(embed=embed, view=view)
 
 
-
-SelectOption = discord.SelectOption
-
-
-
-class weather_select(discord.ui.View):
-  @discord.ui.select(
-    placeholder="地區",
-    options=[
-    SelectOption(label="宜蘭縣", description='宜蘭縣預報'),
-    SelectOption(label="花蓮縣", description='花蓮縣預報'),
-    SelectOption(label="臺東縣", description='臺東縣預報'),
-    SelectOption(label="澎湖縣", description='澎湖縣預報'),
-    SelectOption(label="金門縣", description='金門縣預報'),
-    SelectOption(label="連江縣", description='連江縣預報'),
-    SelectOption(label="臺北市", description='臺北市預報'),
-    SelectOption(label="新北市", description='新北市預報'),
-    SelectOption(label="桃園市", description='桃園市預報'),
-    SelectOption(label="臺中市", description='臺中市預報'),
-    SelectOption(label="臺南市", description='臺南市預報'),
-    SelectOption(label="高雄市", description='高雄市預報'),
-    SelectOption(label="基隆市", description='基隆市預報'),
-    SelectOption(label="新竹縣", description='新竹縣預報'),
-    SelectOption(label="新竹市", description='新竹市預報'),
-    SelectOption(label="苗栗縣", description='苗栗縣預報'),
-    SelectOption(label="彰化縣", description='彰化縣預報'),
-    SelectOption(label="南投縣", description='南投縣預報'),
-    SelectOption(label="雲林縣", description='雲林縣預報'),
-    SelectOption(label="嘉義縣", description='嘉義縣預報'),
-    SelectOption(label="嘉義市", description='嘉義市預報'),
-    SelectOption(label="屏東縣", description='屏東縣預報')          
-  ],
-  custom_id='weather'
-  )
-  async def select_callback(self, select, interaction):
-    data = await get_data(select.values[0]) 
-    await interaction.response.edit_message(embed=data, view=weather_select())
-
-
-@bot.command(name="weather")
+@bot.command(name="weather天氣預報", description="取得當前時段的6小時預報")
 async def _weather(ctx):
   embed=discord.Embed(title="6小時天氣", description="請從下面選一個地區", color=discord.Colour.random())     
   await ctx.respond(embed=embed, view=weather_select())
