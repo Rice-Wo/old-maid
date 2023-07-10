@@ -18,7 +18,7 @@ from datetime import timezone,timedelta
 import time
 import subprocess
 import jieba
-from fun import writeJson, changeLog, weather_select
+from fun import writeJson, changeLog, weather_select, chat_update
 
 
 bot = discord.Bot(status=discord.Status.do_not_disturb, intents = discord.Intents().all())
@@ -86,12 +86,18 @@ async def on_application_command_eeeor(ctx: discord.ApplicationContext, error: d
         await ctx.respond("只有機器人擁有者有權限執行此指令", ephemeral=True)
   else:
       raise error
+  
 
+@bot.command(name='chatdata_update聊天資料更新', description='更新聊天資料', guild_ids=guild_ids)
+@commands.is_owner()
+async def chatdata_update(ctx,
+                          url: discord.Option(str, name='url')):
+  chat_update(url)
+  await ctx.respond('成功更新聊天資料', ephemeral=True)
 
 @bot.command(name="ping延遲", description='回傳機器人ping值')
 async def ping(ctx):
   await ctx.respond(f"目前ping值為 {round(bot.latency * 1000)} ms")
-
 
 
 @bot.command(name="random抽籤", description='從指定數字範圍中抽出指定數量的號碼')

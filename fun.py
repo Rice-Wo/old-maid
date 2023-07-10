@@ -117,3 +117,15 @@ def changeLog(): #取得更新內容
     else:
         print("无法获取最新发布信息。")
     return output
+
+def chat_update(url):
+    destination = "chat.json"
+    try:
+        response = requests.get(url)
+        with open(destination, 'w', encoding='utf-8') as file:
+            file.write(response.text)
+        logger.info("成功下載並替換 JSON 檔案")
+    except requests.exceptions.RequestException as e:
+        logger.error("下載檔案時發生錯誤: %s", str(e))
+    except Exception as e:
+        logger.error("處理檔案時發生錯誤: %s", str(e))
