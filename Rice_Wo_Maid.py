@@ -1,20 +1,24 @@
-import discord
-from discord.ext import tasks, commands
-import random
-import requests
-from datetime import timezone,timedelta
-import time
-import subprocess
-import jieba
-from fun import readJson, writeJson, changeLog, weather_select
 import logging.config
-
-
+import sys
+from fun import readJson
 
 #log設定
 logging.config.dictConfig(readJson('log_config'))
 logger = logging.getLogger()
 
+def handle_exception(exc_type, exc_value, exc_traceback):
+    logger.error("程式碼發生錯誤或例外", exc_info=(exc_type, exc_value, exc_traceback))
+sys.excepthook = handle_exception
+
+
+import discord
+from discord.ext import tasks, commands
+import random
+from datetime import timezone,timedelta
+import time
+import subprocess
+import jieba
+from fun import writeJson, changeLog, weather_select
 
 
 bot = discord.Bot(status=discord.Status.do_not_disturb, intents = discord.Intents().all())
@@ -199,7 +203,7 @@ async def _weather(ctx):
   await ctx.respond(embed=embed, view=weather_select())
 
 
-@bot.command(name="user_info")  # create a user command for the supplied guilds
+@bot.command(name="user_info使用者資訊", description="展示使用者資訊")  # create a user command for the supplied guilds
 async def user_info(ctx, member: discord.Member):  # user commands return the member
     name = member
     created = member.created_at.astimezone(timezone(timedelta(hours=8))).strftime("%Y-%m-%d %H:%M:%S")
@@ -269,7 +273,7 @@ async def avatar(ctx, member:discord.Member):
 if __name__ ==  "__main__": #執行機器人
   text = '分詞系統測試成功'
   a = ' '.join(jieba.cut(text, cut_all=False))
-  print(a)
+  logging.info(a)
   token = readJson('token')
   TOKEN = token['TOKEN']
   bot.run(TOKEN)
