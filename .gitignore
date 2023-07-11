@@ -156,3 +156,4 @@ cython_debug/
 maid beta.code-workspace
 Token.json
 test.py
+chat.json
