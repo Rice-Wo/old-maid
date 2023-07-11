@@ -105,37 +105,36 @@ async def Random(ctx,
                   最大值: discord.Option(int, min_value=-1000, max_value=1000),
                   最小值: discord.Option(int, min_value=-1000, max_value=1000),
                   times: discord.Option(int, name="抽幾次", min_value=1, max_value=10, default=1)):
-    rand = {}
-    if 最大值 > 最小值:
-      max = 最大值
-      min = 最小值
-    else:
-      max = 最小值
-      min = 最大值
+  rand = {}
+  if 最大值 > 最小值:
+    max = 最大值
+    min = 最小值
+  else:
+    max = 最小值
+    min = 最大值
 
-    rand[max] = max
-    rand[min] = min
-    rand[times] = times
-    
-    if max - min < times:
-      await ctx.send("範圍過小，無法抽取")
-      return
+  rand[max] = max
+  rand[min] = min
+  rand[times] = times
+  
+  if max - min < times:
+    await ctx.send("範圍過小，無法抽取")
+    return
 
-    def ran(min, max, times):
-      number = random.sample(range(min, max), times)
-      number.sort()
-      result = " , ".join(map(str, number))
-      embed=discord.Embed(title='以下為隨機結果', description=result,color=discord.Colour.random())
-      embed.set_footer(text=f"抽籤數 {times} 最大值{max} 最小值{min}")
-      return embed
-    
-    class rdbutton(discord.ui.View): # Create a class called MyView that subclasses discord.ui.View
-      @discord.ui.button(label="再抽一次", style=discord.ButtonStyle.primary) 
-      async def button_callback(self, button, interaction):
-        await interaction.response.edit_message(embed=ran(rand[min], rand[max], rand[times]), view=rdbutton())
+  def ran(min, max, times):
+    number = random.sample(range(min, max), times)
+    number.sort()
+    result = " , ".join(map(str, number))
+    embed=discord.Embed(title='以下為隨機結果', description=result,color=discord.Colour.random())
+    embed.set_footer(text=f"抽籤數 {times} 最大值{max} 最小值{min}")
+    return embed
+  
+  class rdbutton(discord.ui.View): # Create a class called MyView that subclasses discord.ui.View
+    @discord.ui.button(label="再抽一次", style=discord.ButtonStyle.primary) 
+    async def button_callback(self, button, interaction):
+      await interaction.response.edit_message(embed=ran(rand[min], rand[max], rand[times]), view=rdbutton())
 
-    await ctx.respond(embed=ran(rand[min], rand[max], rand[times]), view=rdbutton())
-
+  await ctx.respond(embed=ran(rand[min], rand[max], rand[times]), view=rdbutton())
 
 
 @bot.command(name="choice選擇", description="幫你從兩個到五個選項中選一個")
@@ -181,14 +180,12 @@ async def _choice(ctx,
   await ctx.respond(view=cibutton())
 
 
-
 @bot.command(name="clean清除訊息",description="一次性刪掉多條訊息")
 @discord.default_permissions(manage_messages=True)
 async def clean(ctx,
                 num: discord.Option(int)):
   await ctx.channel.purge(limit=num)
   await ctx.respond(f"成功刪除 {num} 則訊息", ephemeral=True)
-
 
 
 @bot.command(name="updatelog更新日誌", description="取得最新版本的更新內容") #更新日誌
@@ -209,16 +206,16 @@ async def _weather(ctx):
   await ctx.respond(embed=embed, view=weather_select())
 
 
-@bot.command(name="user_info使用者資訊", description="展示使用者資訊")  # create a user command for the supplied guilds
+@bot.command(name="user_info使用者資訊", description="展示使用者資訊")  
 async def user_info(ctx, member: discord.Member):  # user commands return the member
-    name = member
+    name = member.name
     created = member.created_at.astimezone(timezone(timedelta(hours=8))).strftime("%Y-%m-%d %H:%M:%S")
     join = member.joined_at.astimezone(timezone(timedelta(hours=8))).strftime("%Y-%m-%d %H:%M:%S")
     created_time = int(time.mktime(time.strptime(created, "%Y-%m-%d %H:%M:%S")))
     join_time = int(time.mktime(time.strptime(join, "%Y-%m-%d %H:%M:%S")))
     avatar = member.avatar
 
-    embed=discord.Embed(title=name, color=member.color)
+    embed=discord.Embed(title=f'使用者名稱:{name}', color=member.color)
     if avatar:
       embed.set_thumbnail(url=avatar)
     embed.add_field(name="帳號創建時間", value=f"<t:{created_time}:D>", inline=True)
@@ -227,11 +224,11 @@ async def user_info(ctx, member: discord.Member):  # user commands return the me
     await ctx.respond(embed=embed)
 
 
-@bot.command(name="avatar頭貼")
+@bot.command(name="avatar頭貼", description='展示指定使用者頭貼')
 async def avatar(ctx, member:discord.Member):
   avatar = member.avatar
   if avatar:
-    await ctx.respond(f"{member}的頭貼:")
+    await ctx.respond(f"{member.name}的頭貼:")
     await ctx.send(f"{avatar}")
   else:
     await ctx.respond("這位使用者沒有頭貼")
@@ -249,7 +246,7 @@ async def avatar(ctx, member:discord.Member):
 
 @bot.user_command(name="使用者資訊")  # create a user command for the supplied guilds
 async def user_info(ctx, member: discord.Member):  # user commands return the member
-    name = member
+    name = member.name
     created = member.created_at.astimezone(timezone(timedelta(hours=8))).strftime("%Y-%m-%d %H:%M:%S")
     join = member.joined_at.astimezone(timezone(timedelta(hours=8))).strftime("%Y-%m-%d %H:%M:%S")
     created_time = int(time.mktime(time.strptime(created, "%Y-%m-%d %H:%M:%S")))
@@ -269,7 +266,7 @@ async def user_info(ctx, member: discord.Member):  # user commands return the me
 async def avatar(ctx, member:discord.Member):
   avatar = member.avatar
   if avatar:
-    await ctx.respond(f"{member}的頭貼:")
+    await ctx.respond(f"{member.name}的頭貼:")
     await ctx.send(f"{avatar}")
   else:
     await ctx.respond("這位使用者沒有頭貼")
