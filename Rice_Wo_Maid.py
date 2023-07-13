@@ -234,8 +234,12 @@ async def avatar(ctx, member:discord.Member):
     await ctx.respond("這位使用者沒有頭貼")
 
 
-
-
+@bot.command(name='commandslist指令列表', description='展示所有指令')
+async def commandlist(ctx):
+  value="\n".join([str(i+1)+". "+x.name for i,x in enumerate(bot.commands)])
+  embed=discord.Embed(title='指令列表', description=value)
+  embed.set_footer(text='稻禾專用女僕Copyright (c) 2022 - 2023 Rice-Wo')
+  await ctx.respond(embed=embed)
 
 
 
@@ -244,7 +248,7 @@ async def avatar(ctx, member:discord.Member):
 使用者指令們:)
 '''
 
-@bot.user_command(name="使用者資訊")  # create a user command for the supplied guilds
+@bot.user_command(name="user_info使用者資訊(使用者指令)")  # create a user command for the supplied guilds
 async def user_info(ctx, member: discord.Member):  # user commands return the member
     name = member.name
     created = member.created_at.astimezone(timezone(timedelta(hours=8))).strftime("%Y-%m-%d %H:%M:%S")
@@ -262,7 +266,7 @@ async def user_info(ctx, member: discord.Member):  # user commands return the me
     await ctx.respond(embed=embed)
 
 
-@bot.user_command(name="頭貼")
+@bot.user_command(name="avatar頭貼(使用者指令)")
 async def avatar(ctx, member:discord.Member):
   avatar = member.avatar
   if avatar:
