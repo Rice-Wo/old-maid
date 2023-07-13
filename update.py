@@ -45,6 +45,7 @@ def apply_update(file_path):
     subprocess.run(["python3", "Rice_Wo_Maid.py"])
 
 # Example usage
+logging.info('file update start')
 download_update(url)
 apply_update("update.zip")
-print("success")
+logging.info("file update success")
