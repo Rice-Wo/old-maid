@@ -38,8 +38,9 @@ async def on_ready():
 @tasks.loop(seconds=5)
 async def status():
   global chat_data
-  await bot.change_presence(status=discord.Status.do_not_disturb,activity=discord.Game(random.choice(setting["status"])))
-  chat_data = readJson('chat')
+  chat = readJson('chat')
+  await bot.change_presence(status=discord.Status.do_not_disturb,activity=discord.Game(random.choice(chat["status"])))
+  chat_data = chat['chat']
 
 
 def chat_response(input_string):
