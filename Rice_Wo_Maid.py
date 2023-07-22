@@ -73,7 +73,7 @@ async def on_application_command_error(ctx: discord.ApplicationContext, error: d
       raise error
 
 
-@bot.command(name="restart重新啟動", description="重啟機器人並下載最新檔案，只適用於Linux", guild_ids=guild_ids)
+@bot.command(name="restart重新啟動", description="重啟機器人並下載最新檔案，目前只有bot架設在Linux時可用", guild_ids=guild_ids)
 @commands.is_owner()
 async def restart(ctx):
   await ctx.respond("執行成功", ephemeral=True)
