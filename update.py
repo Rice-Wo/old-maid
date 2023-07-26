@@ -3,10 +3,13 @@ import shutil
 import zipfile
 import requests
 import subprocess
+import logging.config
 import json
 
-with open('setting.json', 'r', encoding = "utf-8") as setting:
-	setting = json.load(setting)
+with open('log_config.json', "r", encoding='utf-8') as f:
+    log = json.load(f)
+logging.config.dictConfig(log)
+logger = logging.getLogger()
 
 
 response = requests.get("https://api.github.com/repos/Rice-Wo/Rice-Wo-maid/releases/latest")
@@ -26,19 +29,12 @@ def apply_update(file_path):
     # Unzip the update file
     with zipfile.ZipFile(file_path, "r") as zip_ref:
         zip_ref.extractall("update")
-    
-    # Find the location of the updated files
-    update_folder = [f for f in os.listdir("update") if os.path.isdir(os.path.join("update", f))][0]
-    update_folder = os.path.join("update", update_folder)
-    
 
     # Copy all files from the update folder to the current folder
-    for file in os.listdir(update_folder):
-        new_file_path = os.path.join(update_folder, file)
-        old_file_path = os.path.join(".", file)
-        if os.path.isfile(new_file_path):
-            if not os.path.exists(old_file_path):
-                os.makedirs(os.path.dirname(old_file_path), exist_ok=True)
+    for root, dirs, files in os.walk("update"):
+        for file in files:
+            new_file_path = os.path.join(root, file)
+            old_file_path = os.path.join(".", os.path.relpath(new_file_path, "update"))
             shutil.copy2(new_file_path, old_file_path)
 
     # Clean up the update folder
@@ -49,8 +45,7 @@ def apply_update(file_path):
     subprocess.run(["python3", "Rice_Wo_Maid.py"])
 
 # Example usage
-
-
+logging.info('file update start')
 download_update(url)
 apply_update("update.zip")
-print("success")
+logging.info("file update success")
