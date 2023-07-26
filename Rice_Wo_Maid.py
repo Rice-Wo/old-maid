@@ -18,7 +18,7 @@ from datetime import timezone,timedelta
 import time
 import subprocess
 import jieba
-from fun import writeJson, changeLog, weather_select, chat_update
+from fun import writeJson, changeLog, weather_select, chat_update, prerelease
 
 
 bot = discord.Bot(status=discord.Status.do_not_disturb, intents = discord.Intents().all())
@@ -190,14 +190,25 @@ async def clean(ctx,
 
 
 @bot.command(name="updatelog更新日誌", description="取得最新版本的更新內容") #更新日誌
-async def _log(ctx):
+async def log(ctx):
 
-  button = discord.ui.Button(label="更新日誌", url="https://discord.gg/s6G9nsgeNz")
+  button = discord.ui.Button(label="支援伺服器", url="https://discord.gg/s6G9nsgeNz")
 
   view = discord.ui.View()
   view.add_item(button)
     
   embed=discord.Embed(description=changeLog(), color=0x0433ff)
+  await ctx.respond(embed=embed, view=view)
+
+@bot.command(name="prerelease測試版本更新內容", description="取得最近一次測試版的更新內容") #更新日誌
+async def prelog(ctx):
+
+  button = discord.ui.Button(label="支援伺服器", url="https://discord.gg/s6G9nsgeNz")
+
+  view = discord.ui.View()
+  view.add_item(button)
+    
+  embed=discord.Embed(description=prerelease(), color=0x0433ff)
   await ctx.respond(embed=embed, view=view)
 
 

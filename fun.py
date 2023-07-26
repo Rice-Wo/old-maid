@@ -129,3 +129,18 @@ def chat_update(url):
         logger.error("下載檔案時發生錯誤: %s", str(e))
     except Exception as e:
         logger.error("處理檔案時發生錯誤: %s", str(e))
+
+def prerelease(): #取得更新內容
+    response = requests.get("https://api.github.com/repos/Rice-Wo/Rice-Wo-maid/releases")
+    release = response.json()
+    latest_release = release[0]
+
+    if response.status_code == 200:
+        if latest_release.get("prerelease"):
+            changelog = latest_release["body"]
+            version = latest_release["tag_name"]
+
+            output = f'# {version} \n{changelog}'
+    else:
+        print("无法获取最新发布信息。")
+    return output
