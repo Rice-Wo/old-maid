@@ -293,6 +293,6 @@ if __name__ ==  "__main__": #執行機器人
   text = '分詞系統測試成功'
   a = ' '.join(jieba.cut(text, cut_all=False))
   logging.info(a)
-  token = readJson('token')
+  token = readJson('Token')
   TOKEN = token['TOKEN']
   bot.run(TOKEN)
