@@ -1,10 +1,9 @@
 # 稻禾專用女僕
-稻禾專屬的Discord bot
+稻禾專屬的Discord bot   
 
 ## todo list
 - [ ] 21點
 - [ ] 原神抽卡
-- [ ] 停班停課查詢
 - 待新增...
 
 ## 使用
@@ -26,7 +25,7 @@
     ```
     其中A、1、2皆為str  
     這樣就是當對話中含有A"或"B時，機器人會隨機回覆1或2
-2.  須建立Token.json放置Token等東西  
+2.  須建立token.json放置Token等東西  
     格式為
     ```json
     {
