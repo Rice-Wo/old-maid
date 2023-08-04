@@ -24,11 +24,11 @@ from fun import writeJson, changeLog, weather_select, chat_update, prerelease
 bot = discord.Bot(status=discord.Status.do_not_disturb, intents = discord.Intents().all())
 
 setting = readJson('setting')
+version = setting['version']
 
 @bot.event
 async def on_ready():
   status.start()
-  version = setting['version']
   logging.info(f"{bot.user} is online, current version: {version}")
   Token = readJson('Token')
   channel = bot.get_channel(Token['online'])
@@ -65,7 +65,7 @@ guild_ids = token['server']
 @bot.command(name="test測試", description="測試指令功能用", guild_ids=guild_ids)
 @commands.is_owner()
 async def test(ctx):
-   await ctx.respond('成功')
+   await ctx.respond(f'成功 目前版本 {version}')
 @test.error
 async def on_application_command_error(ctx: discord.ApplicationContext, error: discord.DiscordException):
   if isinstance(error, commands.NotOwner):
