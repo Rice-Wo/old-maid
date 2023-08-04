@@ -30,7 +30,7 @@ def readJson(file): #JSON讀取
 
 
 async def get_data(location): #取得天氣預報資料
-  token = readJson('Token')
+  token = readJson('token')
   url = "https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-C0032-001"
   params = {
       "Authorization": token['CWB-TOKEN'],

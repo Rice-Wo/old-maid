@@ -30,8 +30,8 @@ version = setting['version']
 async def on_ready():
   status.start()
   logging.info(f"{bot.user} is online, current version: {version}")
-  Token = readJson('Token')
-  channel = bot.get_channel(Token['online'])
+  token = readJson('token')
+  channel = bot.get_channel(token['online'])
   await channel.send(f"女僕已上線，目前版本 {version}")
 
 
@@ -59,7 +59,7 @@ async def on_message(msg):
   elif chat_response(msg.content):
     await msg.channel.send(chat_response(msg.content))
 
-token = readJson('Token')
+token = readJson('token')
 guild_ids = token['server']
 
 @bot.command(name="test測試", description="測試指令功能用", guild_ids=guild_ids)
@@ -293,6 +293,6 @@ if __name__ ==  "__main__": #執行機器人
   text = '分詞系統測試成功'
   a = ' '.join(jieba.cut(text, cut_all=False))
   logging.info(a)
-  token = readJson('Token')
+  token = readJson('token')
   TOKEN = token['TOKEN']
   bot.run(TOKEN)
