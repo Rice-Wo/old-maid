@@ -120,7 +120,7 @@ def chat_update(url):
     try:
         response = requests.get(url)
         with open(destination, 'w', encoding='utf-8') as file:
-            file.write(response.text)
+            file.write(response.text, ensure_ascii=False, indent=4)
         logger.info("成功下載並替換 JSON 檔案")
     except requests.exceptions.RequestException as e:
         logger.error("下載檔案時發生錯誤: %s", str(e))
