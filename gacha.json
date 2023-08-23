@@ -1,5 +1,14 @@
 {
-    "123": {
-        "total_pulls": 0
+    "test": {
+        "total_pulls": 100610,
+        "pity5_pulls": 100610,
+        "pity5": false,
+        "pity4_pulls": 100610,
+        "pity4": false,
+        "pro": {
+            "5": 0.006,
+            "4": 0.051,
+            "3": 0.943
+        }
     }
 }
