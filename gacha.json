@@ -1,14 +1,24 @@
 {
     "test": {
-        "total_pulls": 100610,
-        "pity5_pulls": 100610,
-        "pity5": false,
-        "pity4_pulls": 100610,
+        "total_pulls": 100,
+        "pity5_pulls": 0,
+        "pity5": true,
+        "pity4_pulls": 100,
         "pity4": false,
         "pro": {
-            "5": 0.006,
+            "5": 0.486,
             "4": 0.051,
             "3": 0.943
+        },
+        "character": {
+            "5star": {
+                "提納里": 1,
+                "林尼": 10,
+                "刻晴": 1,
+                "七七": 2,
+                "莫娜": 1
+            },
+            "4star": {}
         }
     }
 }
