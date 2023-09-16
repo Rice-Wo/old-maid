@@ -12,6 +12,7 @@ sys.excepthook = handle_exception
 
 
 import random
+from collections import defaultdict
 from fun import writeJson
 
 
@@ -86,7 +87,9 @@ class genshin_gacha:
         elif self.pity4_pulls >= self.setting['四星機率增加']:
             self.pro['4'] = self.setting['四星機率up']
         
-        star = self.pull_star()        # 取得本次星級
+        star = self.pull_star() # 取得本次星級
+        if self.pity4_pulls >= 10 and star != '5':
+            star = '4'
 
         if star == '5':
             self.pity5_pulls = 0
@@ -137,8 +140,7 @@ class genshin_gacha:
         if star == '3':
             result = random.choice(self.setting['三星'])
         output = {}
-        output['star'] = star
-        output['result'] = result
+        output[star] = result
         return output
 
 
@@ -146,7 +148,38 @@ class genshin_gacha:
         result = self.gacha_system()
         self.update_data()
         return result
+    
+    def ten_gacha(self):
+        result = defaultdict(list)
+        for i in range(10):
+            output = self.gacha_system()
+            for key, value in output.items():
+                result[key].append(value)
+        if '4' not in result and '5' not in result:
+            random_value = random.choice(result['3'])
+            result['3'].remove(random_value)
+            # 執行四星抽卡
+            self.pity4_pulls = 0
+            self.pro['4'] = self.setting['基礎機率']['4']
+            if self.pity4 == True:
+                up = True
+            else:
+                up = random.choice([True, False])
+            if up == True:
+                result = random.choice(self.setting['up四星'])
+                self.pity4 = False
+                
+            else:
+                result = random.choice(self.setting['常駐四星'])
+                self.pity4 = True
+            if result not in self.character4:
+                self.character4[result] = 1
+            else:
+                self.character4[result] +=1
+        self.update_data()
+        final_result = {key: value for key, value in result.items() if value}
 
+        return final_result
     
   
         

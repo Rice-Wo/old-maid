@@ -19,6 +19,7 @@ import time
 import subprocess
 import jieba
 from fun import writeJson, changeLog, weather_select, chat_update, prerelease
+from genshin import genshin_gacha
 
 
 bot = discord.Bot(status=discord.Status.do_not_disturb, intents = discord.Intents().all())
@@ -253,6 +254,12 @@ async def commandlist(ctx):
   embed.set_footer(text='稻禾專用女僕Copyright (c) 2022 - 2023 Rice-Wo')
   await ctx.respond(embed=embed)
 
+@bot.command(name='原神十抽', description='就十抽')
+async def gacha10(ctx):
+  user_id = ctx.author.id
+  gacha = genshin_gacha(user_id)
+  result = gacha.ten_gacha()
+  await ctx.respond(result)
 
 
 
