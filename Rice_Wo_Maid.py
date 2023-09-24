@@ -66,7 +66,8 @@ guild_ids = token['server']
 @bot.command(name="test測試", description="測試指令功能用", guild_ids=guild_ids)
 @commands.is_owner()
 async def test(ctx):
-   await ctx.respond(f'成功 目前版本 {version}')
+  await ctx.respond(f'成功 目前版本 {version}')
+
 @test.error
 async def on_application_command_error(ctx: discord.ApplicationContext, error: discord.DiscordException):
   if isinstance(error, commands.NotOwner):
@@ -254,12 +255,26 @@ async def commandlist(ctx):
   embed.set_footer(text='稻禾專用女僕Copyright (c) 2022 - 2023 Rice-Wo')
   await ctx.respond(embed=embed)
 
-@bot.command(name='原神十抽', description='就十抽')
+gacha_setting = readJson('gacha_setting')
+
+@bot.command(name='原神十抽beta', description='就十抽')
 async def gacha10(ctx):
   user_id = ctx.author.id
   gacha = genshin_gacha(user_id)
   result = gacha.ten_gacha()
-  await ctx.respond(result)
+  if '5' in result:
+    color = gacha_setting['5color']
+  elif '4' in result: 
+    color = gacha_setting['4color']
+  else: color = gacha_setting['3color']
+  embed=discord.Embed(title='祈願結果',color=color)
+  if '5' in result:
+   embed.add_field(name='5星', value='\n'.join(result['5']), inline=False)
+  if '4' in result:
+   embed.add_field(name='4星', value='\n'.join(result['4']), inline=False)
+  embed.add_field(name='3星', value='\n'.join(result['3']), inline=False)
+  embed.set_footer(text='此為模擬結果僅供參考')
+  await ctx.respond(embed=embed)
 
 
 
