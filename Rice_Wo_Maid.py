@@ -18,7 +18,7 @@ from datetime import timezone,timedelta
 import time
 import subprocess
 import jieba
-from fun import writeJson, changeLog, weather_select, chat_update, prerelease
+from fun import *
 from genshin import genshin_gacha
 
 
@@ -295,6 +295,25 @@ async def gacha(ctx):
   else: embed.add_field(name='3星', value=''.join(result['3']), inline=False)
   embed.set_footer(text='此為模擬結果僅供參考')
   await ctx.respond(embed=embed)
+
+@bot.command(name='genshin-pool原神模擬祈願卡池', description='並不一定是最新的啦.w.')
+async def genshin_pool(ctx):
+  up_5star = gacha_setting['up五星']
+  up_4star = gacha_setting['up四星']
+  pool_version = gacha_setting['原神卡池版本']
+  five = gacha_setting['常駐五星']
+  four = gacha_setting['常駐四星']
+  three = gacha_setting['三星']
+  embed=discord.Embed(title='原神模擬祈願卡池',description=pool_version,color=discord.Colour.random())
+  embed.add_field(name='up五星', value=''.join(up_5star), inline=True)
+  embed.add_field(name='up四星', value=', '.join(up_4star), inline=True)
+  embed.add_field(name='常駐五星', value=embed_text_adjustment(five), inline=True)
+  embed.add_field(name='常駐四星', value=embed_text_adjustment(four), inline=True)
+  embed.add_field(name='三星', value=embed_text_adjustment(three), inline=True)
+  embed.set_footer(text='卡池不定時更新')
+  await ctx.respond(embed=embed)
+
+
 
 
 '''
