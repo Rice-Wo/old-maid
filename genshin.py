@@ -147,6 +147,7 @@ class genshin_gacha:
     def gacha(self):
         result = self.gacha_system()
         self.update_data()
+        logging.debug(result)
         return result
     
     def ten_gacha(self):

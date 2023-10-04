@@ -248,16 +248,17 @@ async def avatar(ctx, member:discord.Member):
     await ctx.respond("這位使用者沒有頭貼")
 
 
-@bot.command(name='commandslist指令列表', description='展示所有指令')
+@bot.command(name='commands-list指令列表', description='展示所有指令')
 async def commandlist(ctx):
   value="\n".join([str(i+1)+". "+x.name for i,x in enumerate(bot.commands)])
   embed=discord.Embed(title='指令列表', description=value)
   embed.set_footer(text='稻禾專用女僕Copyright (c) 2022 - 2023 Rice-Wo')
   await ctx.respond(embed=embed)
 
+# 原神抽卡
 gacha_setting = readJson('gacha_setting')
 
-@bot.command(name='原神十抽beta', description='就十抽')
+@bot.command(name='genshin-10wish原神十抽', description='十抽')
 async def gacha10(ctx):
   user_id = ctx.author.id
   gacha = genshin_gacha(user_id)
@@ -276,6 +277,24 @@ async def gacha10(ctx):
   embed.set_footer(text='此為模擬結果僅供參考')
   await ctx.respond(embed=embed)
 
+@bot.command(name='genshin-wish原神單抽', description='單抽')
+async def gacha(ctx):
+  user_id = ctx.author.id
+  gacha = genshin_gacha(user_id)
+  result = gacha.gacha()
+  if '5' in result:
+    color = gacha_setting['5color']
+  elif '4' in result: 
+    color = gacha_setting['4color']
+  else: color = gacha_setting['3color']
+  embed=discord.Embed(title='祈願結果',color=color)
+  if '5' in result:
+   embed.add_field(name='5星', value=''.join(result['5']), inline=False)
+  if '4' in result:
+   embed.add_field(name='4星', value=''.join(result['4']), inline=False)
+  else: embed.add_field(name='3星', value=''.join(result['3']), inline=False)
+  embed.set_footer(text='此為模擬結果僅供參考')
+  await ctx.respond(embed=embed)
 
 
 '''
