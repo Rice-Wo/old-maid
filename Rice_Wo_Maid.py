@@ -36,7 +36,7 @@ async def on_ready():
   await channel.send(f"女僕已上線，目前版本 {version}")
 
 
-@tasks.loop(seconds=5)
+@tasks.loop(seconds=60)
 async def status():
   global chat_data
   chat = readJson('chat')
@@ -307,15 +307,36 @@ async def genshin_pool(ctx):
   embed=discord.Embed(title='原神模擬祈願卡池',description=pool_version,color=discord.Colour.random())
   embed.add_field(name='up五星', value=''.join(up_5star), inline=True)
   embed.add_field(name='up四星', value=', '.join(up_4star), inline=True)
-  embed.add_field(name='常駐五星', value=embed_text_adjustment(five), inline=True)
+  embed.add_field(name='常駐五星', value=embed_text_adjustment(five), inline=False)
   embed.add_field(name='常駐四星', value=embed_text_adjustment(four), inline=True)
   embed.add_field(name='三星', value=embed_text_adjustment(three), inline=True)
   embed.set_footer(text='卡池不定時更新')
   await ctx.respond(embed=embed)
 
-
-
-
+@bot.command(name='genshin-showcase原神模擬抽卡角色展示', description='在這裡抽到的都是假的.w.')
+async def genshin_showcase(ctx):
+  user_id = ctx.author.id
+  gacha = genshin_gacha(user_id)
+  character5 = gacha.genshin5
+  character4 = gacha.genshin4
+  name5 = list(character5.keys())
+  name4 = list(character4.keys())
+  five = []
+  four = []  
+  for i in name5:
+    j = character5[i]
+    k = f"{i}：{j}"
+    five.append(k)
+  for i in name4:
+    j = character4[i]
+    k = f"{i}：{j}"
+    four.append(k)
+  
+  embed=discord.Embed(title='原神模擬祈願角色展示',description=f'{ctx.author.mention}',color=discord.Colour.random())
+  embed.add_field(name='五星', value='\n'.join(five), inline=False)
+  embed.add_field(name='四星', value='\n'.join(four), inline=True)
+  embed.set_footer(text='在這裡抽到不代表你在遊戲裡能抽到喔~')
+  await ctx.respond(embed=embed)
 '''
 使用者指令們:)
 '''
