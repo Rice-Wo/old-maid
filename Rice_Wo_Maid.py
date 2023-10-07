@@ -270,10 +270,10 @@ async def gacha10(ctx):
   else: color = gacha_setting['3color']
   embed=discord.Embed(title='祈願結果',color=color)
   if '5' in result:
-   embed.add_field(name='5星', value='\n'.join(result['5']), inline=False)
+   embed.add_field(name='**5星**', value='\n'.join(result['5']), inline=False)
   if '4' in result:
-   embed.add_field(name='4星', value='\n'.join(result['4']), inline=False)
-  embed.add_field(name='3星', value='\n'.join(result['3']), inline=False)
+   embed.add_field(name='**4星**', value='\n'.join(result['4']), inline=False)
+  embed.add_field(name='**3星**', value='\n'.join(result['3']), inline=False)
   embed.set_footer(text='此為模擬結果僅供參考')
   await ctx.respond(embed=embed)
 
@@ -289,10 +289,10 @@ async def gacha(ctx):
   else: color = gacha_setting['3color']
   embed=discord.Embed(title='祈願結果',color=color)
   if '5' in result:
-   embed.add_field(name='5星', value=''.join(result['5']), inline=False)
+   embed.add_field(name='**5星**', value=''.join(result['5']), inline=False)
   if '4' in result:
-   embed.add_field(name='4星', value=''.join(result['4']), inline=False)
-  else: embed.add_field(name='3星', value=''.join(result['3']), inline=False)
+   embed.add_field(name='**4星**', value=''.join(result['4']), inline=False)
+  else: embed.add_field(name='**3星**', value=''.join(result['3']), inline=False)
   embed.set_footer(text='此為模擬結果僅供參考')
   await ctx.respond(embed=embed)
 
@@ -305,11 +305,11 @@ async def genshin_pool(ctx):
   four = gacha_setting['常駐四星']
   three = gacha_setting['三星']
   embed=discord.Embed(title='原神模擬祈願卡池',description=pool_version,color=discord.Colour.random())
-  embed.add_field(name='up五星', value=''.join(up_5star), inline=True)
-  embed.add_field(name='up四星', value=', '.join(up_4star), inline=True)
-  embed.add_field(name='常駐五星', value=embed_text_adjustment(five), inline=False)
-  embed.add_field(name='常駐四星', value=embed_text_adjustment(four), inline=True)
-  embed.add_field(name='三星', value=embed_text_adjustment(three), inline=True)
+  embed.add_field(name='**up五星**', value=''.join(up_5star), inline=True)
+  embed.add_field(name='**up四星**', value=', '.join(up_4star), inline=True)
+  embed.add_field(name='**常駐五星**', value=embed_text_adjustment(five), inline=False)
+  embed.add_field(name='**常駐四星**', value=embed_text_adjustment(four), inline=True)
+  embed.add_field(name='**三星**', value=embed_text_adjustment(three), inline=True)
   embed.set_footer(text='卡池不定時更新')
   await ctx.respond(embed=embed)
 
