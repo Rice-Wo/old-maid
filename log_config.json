@@ -1,28 +1,30 @@
 {
-    "version": 1,
-    "disable_existing_loggers": false,
-    "formatters": {
-      "standard": {
-        "format": "%(asctime)s [%(levelname)s] : %(message)s",
-        "datefmt": "%Y-%m-%d %H:%M:%S"
-      }
-    },
-    "handlers": {
-      "file_handler": {
-        "class": "logging.FileHandler",
-        "formatter": "standard",
-        "filename": "log_file.log",
-        "mode": "w",
-        "encoding": "utf-8"
-      },
-      "console_handler": {
-        "class": "logging.StreamHandler",
-        "formatter": "standard"
-      }
-    },
-    "root": {
-      "level": "INFO",
-      "handlers": ["file_handler", "console_handler"]
+  "version": 1,
+  "disable_existing_loggers": false,
+  "formatters": {
+    "standard": {
+      "format": "%(asctime)s [%(levelname)s] : %(message)s",
+      "datefmt": "%Y-%m-%d %H:%M:%S"
     }
+  },
+  "handlers": {
+    "file_handler": {
+      "class": "logging.FileHandler",
+      "formatter": "standard",
+      "filename": "log_file.log",
+      "mode": "w",
+      "encoding": "utf-8",
+      "level": "DEBUG"  
+    },
+    "console_handler": {
+      "class": "logging.StreamHandler",
+      "formatter": "standard",
+      "level": "INFO"   
+    }
+  },
+  "root": {
+    "level": "NOTSET",
+    "handlers": ["file_handler", "console_handler"]
   }
+}
   

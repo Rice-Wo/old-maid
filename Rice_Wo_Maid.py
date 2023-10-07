@@ -18,7 +18,8 @@ from datetime import timezone,timedelta
 import time
 import subprocess
 import jieba
-from fun import writeJson, changeLog, weather_select, chat_update, prerelease
+from fun import *
+from genshin import genshin_gacha
 
 
 bot = discord.Bot(status=discord.Status.do_not_disturb, intents = discord.Intents().all())
@@ -35,7 +36,7 @@ async def on_ready():
   await channel.send(f"女僕已上線，目前版本 {version}")
 
 
-@tasks.loop(seconds=5)
+@tasks.loop(seconds=60)
 async def status():
   global chat_data
   chat = readJson('chat')
@@ -65,7 +66,8 @@ guild_ids = token['server']
 @bot.command(name="test測試", description="測試指令功能用", guild_ids=guild_ids)
 @commands.is_owner()
 async def test(ctx):
-   await ctx.respond(f'成功 目前版本 {version}')
+  await ctx.respond(f'成功 目前版本 {version}')
+
 @test.error
 async def on_application_command_error(ctx: discord.ApplicationContext, error: discord.DiscordException):
   if isinstance(error, commands.NotOwner):
@@ -246,16 +248,95 @@ async def avatar(ctx, member:discord.Member):
     await ctx.respond("這位使用者沒有頭貼")
 
 
-@bot.command(name='commandslist指令列表', description='展示所有指令')
+@bot.command(name='commands-list指令列表', description='展示所有指令')
 async def commandlist(ctx):
   value="\n".join([str(i+1)+". "+x.name for i,x in enumerate(bot.commands)])
   embed=discord.Embed(title='指令列表', description=value)
   embed.set_footer(text='稻禾專用女僕Copyright (c) 2022 - 2023 Rice-Wo')
   await ctx.respond(embed=embed)
 
+# 原神抽卡
+gacha_setting = readJson('gacha_setting')
 
+@bot.command(name='genshin-10wish原神十抽', description='十抽')
+async def gacha10(ctx):
+  user_id = ctx.author.id
+  gacha = genshin_gacha(user_id)
+  result = gacha.ten_gacha()
+  if '5' in result:
+    color = gacha_setting['5color']
+  elif '4' in result: 
+    color = gacha_setting['4color']
+  else: color = gacha_setting['3color']
+  embed=discord.Embed(title='祈願結果',color=color)
+  if '5' in result:
+   embed.add_field(name='5星', value='\n'.join(result['5']), inline=False)
+  if '4' in result:
+   embed.add_field(name='4星', value='\n'.join(result['4']), inline=False)
+  embed.add_field(name='3星', value='\n'.join(result['3']), inline=False)
+  embed.set_footer(text='此為模擬結果僅供參考')
+  await ctx.respond(embed=embed)
 
+@bot.command(name='genshin-wish原神單抽', description='單抽')
+async def gacha(ctx):
+  user_id = ctx.author.id
+  gacha = genshin_gacha(user_id)
+  result = gacha.gacha()
+  if '5' in result:
+    color = gacha_setting['5color']
+  elif '4' in result: 
+    color = gacha_setting['4color']
+  else: color = gacha_setting['3color']
+  embed=discord.Embed(title='祈願結果',color=color)
+  if '5' in result:
+   embed.add_field(name='5星', value=''.join(result['5']), inline=False)
+  if '4' in result:
+   embed.add_field(name='4星', value=''.join(result['4']), inline=False)
+  else: embed.add_field(name='3星', value=''.join(result['3']), inline=False)
+  embed.set_footer(text='此為模擬結果僅供參考')
+  await ctx.respond(embed=embed)
 
+@bot.command(name='genshin-pool原神模擬祈願卡池', description='並不一定是最新的啦.w.')
+async def genshin_pool(ctx):
+  up_5star = gacha_setting['up五星']
+  up_4star = gacha_setting['up四星']
+  pool_version = gacha_setting['原神卡池版本']
+  five = gacha_setting['常駐五星']
+  four = gacha_setting['常駐四星']
+  three = gacha_setting['三星']
+  embed=discord.Embed(title='原神模擬祈願卡池',description=pool_version,color=discord.Colour.random())
+  embed.add_field(name='up五星', value=''.join(up_5star), inline=True)
+  embed.add_field(name='up四星', value=', '.join(up_4star), inline=True)
+  embed.add_field(name='常駐五星', value=embed_text_adjustment(five), inline=False)
+  embed.add_field(name='常駐四星', value=embed_text_adjustment(four), inline=True)
+  embed.add_field(name='三星', value=embed_text_adjustment(three), inline=True)
+  embed.set_footer(text='卡池不定時更新')
+  await ctx.respond(embed=embed)
+
+@bot.command(name='genshin-showcase原神模擬抽卡角色展示', description='在這裡抽到的都是假的.w.')
+async def genshin_showcase(ctx):
+  user_id = ctx.author.id
+  gacha = genshin_gacha(user_id)
+  character5 = gacha.genshin5
+  character4 = gacha.genshin4
+  name5 = list(character5.keys())
+  name4 = list(character4.keys())
+  five = []
+  four = []  
+  for i in name5:
+    j = character5[i]
+    k = f"{i}：{j}"
+    five.append(k)
+  for i in name4:
+    j = character4[i]
+    k = f"{i}：{j}"
+    four.append(k)
+  
+  embed=discord.Embed(title='原神模擬祈願角色展示',description=f'{ctx.author.mention}',color=discord.Colour.random())
+  embed.add_field(name='五星', value='\n'.join(five), inline=False)
+  embed.add_field(name='四星', value='\n'.join(four), inline=True)
+  embed.set_footer(text='在這裡抽到不代表你在遊戲裡能抽到喔~')
+  await ctx.respond(embed=embed)
 '''
 使用者指令們:)
 '''

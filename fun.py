@@ -10,21 +10,22 @@ with open('log_config.json', "r", encoding='utf-8') as f:
     log = json.load(f)
 logging.config.dictConfig(log)
 logger = logging.getLogger()
+def handle_exception(exc_type, exc_value, exc_traceback):
+    logger.error("程式碼發生錯誤或例外", exc_info=(exc_type, exc_value, exc_traceback))
+sys.excepthook = handle_exception
 
 
 # 定義全域變數
-main_script_path = os.path.abspath(sys.argv[0])
-main_script_directory = os.path.dirname(main_script_path)
+
 
 def writeJson(file, item): #JSON寫入
-    file_path = os.path.join(main_script_directory, file + '.json')
-    with open(file_path, "w+") as f:
+    with open(file + '.json', "w+", encoding='utf-8') as f:
         f.write(json.dumps(item, ensure_ascii=False, indent=4))
+   # logging.debug(f'寫入資料至 {file}.json 資料內容{item}')
 
 
 def readJson(file): #JSON讀取
-    file_path = os.path.join(main_script_directory, file + '.json')
-    with open(file_path, "r", encoding='utf-8') as f:
+    with open(file + '.json', "r", encoding='utf-8') as f:
         data = json.load(f)
     return data
 
@@ -123,7 +124,7 @@ def chat_update(url):
     try:
         response = requests.get(url)
         with open(destination, 'w', encoding='utf-8') as file:
-            file.write(response.text)
+            file.write(response.text, ensure_ascii=False, indent=4)
         logger.info("成功下載並替換 JSON 檔案")
     except requests.exceptions.RequestException as e:
         logger.error("下載檔案時發生錯誤: %s", str(e))
@@ -144,3 +145,29 @@ def prerelease(): #取得更新內容
     else:
         print("无法获取最新发布信息。")
     return output
+
+def embed_text_adjustment(input):
+    max_line_length = 15
+
+    # 初始化結果列表
+    result = []
+    current_line = []
+
+    # 遍歷原始列表
+    for name in input:
+        # 檢查將當前名字添加到當前行是否超出最大字數
+        if len(', '.join(current_line + [name])) <= max_line_length:
+            current_line.append(name)
+        else:
+            # 如果超出最大字數，將當前行添加到結果列表中，並初始化新的當前行
+            result.append(', '.join(current_line))
+            current_line = [name]
+
+    # 將剩餘的當前行添加到結果列表
+    result.append(', '.join(current_line))
+
+    # 將結果列表中的元素使用'\n'分隔成最終字符串
+    final_result = '\n'.join(result)
+
+    # 輸出結果
+    return final_result
