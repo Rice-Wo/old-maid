@@ -33,8 +33,8 @@ class genshin_gacha:
         self.pity5 = self.user['pity5']
         self.pity4_pulls = self.user['pity4_pulls']
         self.pity4 = self.user['pity4']
-        self.character5 = self.user['character']['5star']
-        self.character4 = self.user['character']['4star']
+        self.genshin5 = self.user['genshin']['5star']
+        self.genshin4 = self.user['genshin']['4star']
 
 
     def update_data(self):
@@ -44,8 +44,8 @@ class genshin_gacha:
         self.data[self.id]['pity5'] = self.pity5
         self.data[self.id]['pity4_pulls'] = self.pity4_pulls
         self.data[self.id]['pity4'] = self.pity4
-        self.data[self.id]['character']['5star'] = self.character5
-        self.data[self.id]['character']['4star'] = self.character4
+        self.data[self.id]['genshin']['5star'] = self.genshin5
+        self.data[self.id]['genshin']['4star'] = self.genshin4
         writeJson('gacha', self.data)
 
 
@@ -57,9 +57,9 @@ class genshin_gacha:
         self.data[self.id]['pity4_pulls'] = 0
         self.data[self.id]['pity4'] = False
         self.data[self.id]['pro'] = self.setting['基礎機率']
-        self.data[self.id]['character'] = {}
-        self.data[self.id]['character']['5star'] = {}
-        self.data[self.id]['character']['4star'] = {}
+        self.data[self.id]['genshin'] = {}
+        self.data[self.id]['genshin']['5star'] = {}
+        self.data[self.id]['genshin']['4star'] = {}
 
         writeJson('gacha', self.data)
 
@@ -108,10 +108,10 @@ class genshin_gacha:
             else:
                 result = random.choice(self.setting['常駐五星'])
                 self.pity5 = True
-            if result not in self.character5:
-                self.character5[result] = 1
+            if result not in self.genshin5:
+                self.genshin5[result] = 1
             else:
-                self.character5[result] +=1
+                self.genshin5[result] +=1
             #logging.debug(f'5result: {result}')
 
         if star =='4':
@@ -131,10 +131,10 @@ class genshin_gacha:
             else:
                 result = random.choice(self.setting['常駐四星'])
                 self.pity4 = True
-            if result not in self.character4:
-                self.character4[result] = 1
+            if result not in self.genshin4:
+                self.genshin4[result] = 1
             else:
-                self.character4[result] +=1
+                self.genshin4[result] +=1
             #logging.debug(f'4result: {result}')
 
         if star == '3':
@@ -173,10 +173,10 @@ class genshin_gacha:
             else:
                 result = random.choice(self.setting['常駐四星'])
                 self.pity4 = True
-            if result not in self.character4:
-                self.character4[result] = 1
+            if result not in self.genshin4:
+                self.genshin4[result] = 1
             else:
-                self.character4[result] +=1
+                self.genshin4[result] +=1
         self.update_data()
         final_result = {key: value for key, value in result.items() if value}
 
