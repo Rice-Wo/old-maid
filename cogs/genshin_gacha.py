@@ -15,6 +15,8 @@ sys.excepthook = handle_exception
 import discord
 from discord.ext import commands
 from fun import *
+from genshin import genshin_gacha
+
 
 """
 所有跟機器人最基本功能有關聯的都在這
@@ -22,7 +24,7 @@ from fun import *
 
 
 
-class genshin_gacha(commands.Cog):
+class genshin(commands.Cog):
     def __init__(self, bot): 
         self.bot = bot   
         self.gacha_setting = readJson('gacha_setting')
@@ -112,4 +114,4 @@ class genshin_gacha(commands.Cog):
 
 
 def setup(bot): # this is called by Pycord to setup the cog
-    bot.add_cog(genshin_gacha(bot)) # add the cog to the bot
+    bot.add_cog(genshin(bot)) # add the cog to the bot

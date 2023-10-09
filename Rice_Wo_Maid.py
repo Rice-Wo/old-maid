@@ -20,6 +20,8 @@ import subprocess
 import jieba
 from fun import *
 from genshin import genshin_gacha
+from pathlib import Path
+
 
 
 bot = discord.Bot(status=discord.Status.do_not_disturb, intents = discord.Intents().all())
@@ -30,6 +32,12 @@ version = setting['version']
 @bot.event
 async def on_ready():
   status.start()
+  loaded_cogs = list(bot.cogs.keys())
+  if loaded_cogs:
+    for cog_name in loaded_cogs:
+      logging.info(f'已載入 {cog_name} 模塊')
+  else:
+    logging.warning('沒有任何模組被載入，請確認cogs資料夾')
   logging.info(f"{bot.user} is online, current version: {version}")
   token = readJson('token')
   channel = bot.get_channel(token['online'])
@@ -64,40 +72,11 @@ token = readJson('token')
 guild_ids = token['server']
 
 
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# 原神抽卡
-
-'''
-使用者指令們:)
-'''
-
-
+#載入cog
+for filepath in Path("./cogs").glob("**/*.py"):
+	cog_name = Path(filepath).stem
+	bot.load_extension(f"cogs.{cog_name}")
+	logging.debug(f'已載入 {cog_name} 模塊')
 
 if __name__ ==  "__main__": #執行機器人
   text = '分詞系統測試成功'

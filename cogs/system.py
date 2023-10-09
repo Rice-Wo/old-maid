@@ -38,7 +38,7 @@ class system(commands.Cog):
     @commands.is_owner()
     async def _close(self, ctx):
         await ctx.respond('正在關閉機器人')
-        await self.bot.close()
+        await self.self.bot.close()
 
     @discord.slash_command(name="test測試", description="測試指令功能用", guild_ids=guild_ids)
     @commands.is_owner()
@@ -53,6 +53,38 @@ class system(commands.Cog):
         await ctx.respond('成功更新聊天資料', ephemeral=True)
     
 
+    @discord.slash_command(name='load-cog載入模組', description='只有主人能用喵')
+    @commands.is_owner()
+    async def load(self, ctx, cog):
+  
+        self.bot.load_extension(f"cogs.{cog}")
+        await ctx.respond(f"loaded {cog}")
+    @load.error
+    async def load_error(self, ctx, error):
+        await ctx.respond(f"load failed")
+
+
+    @discord.slash_command(name='unload-cog卸載模組', description='只有主人能用喵')
+    @commands.is_owner()
+    async def unload(self, ctx, cog):
+        self.bot.unload_extension(f"cogs.{cog}")
+        await ctx.respond(f"unloaded {cog}")
+    @unload.error
+    async def unload_error(self, ctx, error):
+      await ctx.respond(f"unload failed")
+
+
+    @discord.slash_command(name='reload-cog重新載入模組', description='只有主人能用喵')
+    @commands.is_owner()
+    async def reload(self, ctx, cog):
+        
+        self.bot.reload_extension(f"cogs.{cog}")
+        await ctx.respond(f"reloaded {cog}")
+    @reload.error
+    async def reload_error(self, ctx, error):
+       await ctx.respond(f"reload failed")
+
+
 
 
     async def cog_command_error(self, ctx: commands.Context, error: commands.CommandError):
@@ -64,4 +96,4 @@ class system(commands.Cog):
 
 
 def setup(bot): # this is called by Pycord to setup the cog
-    bot.add_cog(system(bot)) # add the cog to the bot
+    bot.add_cog(system(bot)) # add the cog to the self.bot

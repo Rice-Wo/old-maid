@@ -162,6 +162,14 @@ class maid(commands.Cog):
             await ctx.send(f"{avatar}")
         else:
             await ctx.respond("這位使用者沒有頭貼")
+    
+
+    @discord.slash_command(name='commands-list指令列表', description='展示所有指令')
+    async def commandlist(self, ctx):
+        value="\n".join([str(i+1)+". "+x.name for i,x in enumerate(self.bot.commands)])
+        embed=discord.Embed(title='指令列表', description=value)
+        embed.set_footer(text='稻禾專用女僕Copyright (c) 2022 - 2023 Rice-Wo')
+        await ctx.respond(embed=embed)
 
 
 
