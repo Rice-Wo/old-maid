@@ -1,0 +1,54 @@
+import discord
+from discord.ext import commands
+from fun import *
+
+"""
+所有跟機器人最基本功能有關聯的都在這
+"""
+
+
+
+class system(commands.Cog):
+    def __init__(self, bot): 
+        self.bot = bot   
+        self.setting = readJson('setting')
+        self.version = self.setting['version']
+
+    token = readJson('token')
+    guild_ids = token['server']
+        
+    @discord.slash_command(name="ping")
+    async def ping(self, ctx):
+        await ctx.respond(f"目前ping值為 {round(self.bot.latency * 1000)} ms")
+
+    @discord.slash_command(name='close')
+    @commands.is_owner()
+    async def _close(self, ctx):
+        await ctx.respond('正在關閉機器人')
+        await self.bot.close()
+
+    @discord.slash_command(name="test測試", description="測試指令功能用", guild_ids=guild_ids)
+    @commands.is_owner()
+    async def test(self, ctx):
+        await ctx.respond(f'成功 目前版本 {self.version}')
+        
+    @discord.slash_command(name='chatdata_update聊天資料更新', description='更新聊天資料', guild_ids=guild_ids)
+    @commands.is_owner()
+    async def chatdata_update(self, ctx,
+                            url: discord.Option(str, name='url')):
+        chat_update(url)
+        await ctx.respond('成功更新聊天資料', ephemeral=True)
+    
+
+
+
+    async def cog_command_error(self, ctx: commands.Context, error: commands.CommandError):
+        if isinstance(error, commands.NotOwner):
+            await ctx.send("只有機器人主人能使用這個指令!")
+        else:
+            raise error  # Here we raise other errors to ensure they aren't ignored
+
+
+
+def setup(bot): # this is called by Pycord to setup the cog
+    bot.add_cog(system(bot)) # add the cog to the bot
