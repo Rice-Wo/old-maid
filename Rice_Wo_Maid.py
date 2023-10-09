@@ -73,121 +73,17 @@ guild_ids = token['server']
 
 
 
-@bot.command(name="random抽籤", description='從指定數字範圍中抽出指定數量的號碼')
-async def Random(ctx,
-                  最大值: discord.Option(int, min_value=-1000, max_value=1000),
-                  最小值: discord.Option(int, min_value=-1000, max_value=1000),
-                  times: discord.Option(int, name="抽幾次", min_value=1, max_value=10, default=1)):
-  rand = {}
-  if 最大值 > 最小值:
-    max = 最大值
-    min = 最小值
-  else:
-    max = 最小值
-    min = 最大值
-
-  rand[max] = max
-  rand[min] = min
-  rand[times] = times
-  
-  if max - min < times:
-    await ctx.send("範圍過小，無法抽取")
-    return
-
-  def ran(min, max, times):
-    number = random.sample(range(min, max), times)
-    number.sort()
-    result = " , ".join(map(str, number))
-    embed=discord.Embed(title='以下為隨機結果', description=result,color=discord.Colour.random())
-    embed.set_footer(text=f"抽籤數 {times} 最大值{max} 最小值{min}")
-    return embed
-  
-  class rdbutton(discord.ui.View): # Create a class called MyView that subclasses discord.ui.View
-    @discord.ui.button(label="再抽一次", style=discord.ButtonStyle.primary) 
-    async def button_callback(self, button, interaction):
-      await interaction.response.edit_message(embed=ran(rand[min], rand[max], rand[times]), view=rdbutton())
-
-  await ctx.respond(embed=ran(rand[min], rand[max], rand[times]), view=rdbutton())
 
 
-@bot.command(name="choice選擇", description="幫你從兩個到五個選項中選一個")
-async def _choice(ctx,
-                  ques: discord.Option(str,"問題是什麼", name="問題"),
-                  times: discord.Option(int, name="選項數", min_value=2, max_value=5, default=2)):
-  list = []
-
-  def ci(self, interaction: discord.Interaction):
-   
-    for j in range(len(self.children)):
-      value = self.children[j].value
-      list.append(value)
-    return list
-
-  def rc(ques, list):
-    select = " ".join(list)  
-    embed=discord.Embed(title=f"關於 {ques} ", color = discord.Colour.random())
-    embed.add_field(name=f"{random.choice(list)}", value=f"從 {select} 裡面選一個出來的", inline=False)
-    embed.set_footer(text="本結果為隨機選出，僅供參考")
-    return embed 
-  
-  class rcbutton(discord.ui.View): # Create a class called MyView that subclasses discord.ui.View
-    @discord.ui.button(label="再選一次", style=discord.ButtonStyle.primary)
-    async def button_callback(self, button, interaction):
-      await interaction.response.edit_message(embed=rc(ques, list), view=rcbutton())
-
-  class cimodal(discord.ui.Modal):
-    def __init__(self, *args, **kwargs) -> None:
-        super().__init__(*args, **kwargs)
-
-        for i in range(0, times):
-          self.add_item(discord.ui.InputText(label=f"第 {i+1} 個選項"))        
-
-    async def callback(self, interaction: discord.Interaction):
-        await interaction.response.send_message(embed=rc(ques, ci(self, interaction)), view=rcbutton())
-
-  class cibutton(discord.ui.View):
-      @discord.ui.button(label="按這填入選項")
-      async def button_callback(self, button, interaction):
-          await interaction.response.send_modal(cimodal(title="請輸入選項"))
-  
-  await ctx.respond(view=cibutton())
 
 
-@bot.command(name="clean清除訊息",description="一次性刪掉多條訊息")
-@discord.default_permissions(manage_messages=True)
-async def clean(ctx,
-                num: discord.Option(int)):
-  await ctx.channel.purge(limit=num)
-  await ctx.respond(f"成功刪除 {num} 則訊息", ephemeral=True)
 
 
-@bot.command(name="updatelog更新日誌", description="取得最新版本的更新內容") #更新日誌
-async def log(ctx):
-
-  button = discord.ui.Button(label="支援伺服器", url="https://discord.gg/s6G9nsgeNz")
-
-  view = discord.ui.View()
-  view.add_item(button)
-    
-  embed=discord.Embed(description=changeLog(), color=0x0433ff)
-  await ctx.respond(embed=embed, view=view)
-
-@bot.command(name="prerelease測試版本更新內容", description="取得最近一次測試版的更新內容") #更新日誌
-async def prelog(ctx):
-
-  button = discord.ui.Button(label="支援伺服器", url="https://discord.gg/s6G9nsgeNz")
-
-  view = discord.ui.View()
-  view.add_item(button)
-    
-  embed=discord.Embed(description=prerelease(), color=0x0433ff)
-  await ctx.respond(embed=embed, view=view)
 
 
-@bot.command(name="weather天氣預報", description="取得當前時段的6小時預報")
-async def _weather(ctx):
-  embed=discord.Embed(title="6小時天氣", description="請從下面選一個地區", color=discord.Colour.random())     
-  await ctx.respond(embed=embed, view=weather_select())
+
+
+
 
 
 @bot.command(name="user_info使用者資訊", description="展示使用者資訊")  
@@ -218,12 +114,7 @@ async def avatar(ctx, member:discord.Member):
     await ctx.respond("這位使用者沒有頭貼")
 
 
-@bot.command(name='commands-list指令列表', description='展示所有指令')
-async def commandlist(ctx):
-  value="\n".join([str(i+1)+". "+x.name for i,x in enumerate(bot.commands)])
-  embed=discord.Embed(title='指令列表', description=value)
-  embed.set_footer(text='稻禾專用女僕Copyright (c) 2022 - 2023 Rice-Wo')
-  await ctx.respond(embed=embed)
+
 
 # 原神抽卡
 gacha_setting = readJson('gacha_setting')
