@@ -97,3 +97,5 @@ class system(commands.Cog):
 
 def setup(bot): # this is called by Pycord to setup the cog
     bot.add_cog(system(bot)) # add the cog to the self.bot
+
+logging.debug('system had been imported')

@@ -115,3 +115,5 @@ class genshin(commands.Cog):
 
 def setup(bot): # this is called by Pycord to setup the cog
     bot.add_cog(genshin(bot)) # add the cog to the bot
+
+logging.debug('genshin_gacha had been imported')

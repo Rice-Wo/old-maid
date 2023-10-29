@@ -176,3 +176,5 @@ class maid(commands.Cog):
 
 def setup(bot): # this is called by Pycord to setup the cog
     bot.add_cog(maid(bot)) # add the cog to the bot
+
+logging.debug('maid had been imported')
