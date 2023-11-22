@@ -19,7 +19,6 @@ import time
 import subprocess
 import jieba
 from fun import *
-from genshin import genshin_gacha
 from pathlib import Path
 
 
@@ -69,14 +68,14 @@ async def on_message(msg):
     await msg.channel.send(chat_response(msg.content))
 
 token = readJson('token')
-guild_ids = token['server']
 
 
 #載入cog
-for filepath in Path("./cogs").glob("**/*.py"):
-	cog_name = Path(filepath).stem
-	bot.load_extension(f"cogs.{cog_name}")
-	logging.debug(f'已載入 {cog_name} 模塊')
+for filepath in Path("./cogs").glob("**/*cog.py"): #載入cog
+	parts = list(filepath.parts)
+	parts[-1] = filepath.stem
+	bot.load_extension(".".join(parts))
+	logging.debug(f'已載入 {parts} 模塊')
 
 if __name__ ==  "__main__": #執行機器人
   text = '分詞系統測試成功'
