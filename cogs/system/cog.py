@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 import requests
+import logging
 
 from utility import get_data, config
 
@@ -15,8 +16,8 @@ class system(commands.Cog):
         self.bot = bot   
         self.version = config.version
 
-    token = readJson('token')
-    guild_ids = token['server']
+    
+    guild_ids = config.admin_server
         
     @discord.slash_command(name="ping")
     async def ping(self, ctx):
@@ -28,12 +29,12 @@ class system(commands.Cog):
         await ctx.respond('正在關閉機器人')
         await self.self.bot.close()
 
-    @discord.slash_command(name="test測試", description="測試指令功能用", guild_ids=guild_ids)
+    @discord.slash_command(name="test測試", description="測試指令功能用", guild_id=guild_ids)
     @commands.is_owner()
     async def test(self, ctx):
         await ctx.respond(f'成功 目前版本 {self.version}')
         
-    @discord.slash_command(name='chatdata_update聊天資料更新', description='更新聊天資料', guild_ids=guild_ids)
+    @discord.slash_command(name='chatdata_update聊天資料更新', description='更新聊天資料', guild_id=guild_ids)
     @commands.is_owner()
     async def chatdata_update(self, ctx,
                               url: discord.Option(str, name='url')):

@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
-from utility import readJson
-from genshin import genshin_gacha
+from utility import get_data
+from .genshin import genshin_gacha
 import logging
 
 """
@@ -13,7 +13,7 @@ import logging
 class genshin(commands.Cog):
     def __init__(self, bot): 
         self.bot = bot   
-        self.gacha_setting = readJson('gacha_setting')
+        self.gacha_setting = get_data('gacha_setting')
 
 
     

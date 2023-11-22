@@ -7,15 +7,14 @@ import discord
 from discord.ext import tasks, commands
 import random
 import jieba
-from utility import *
+from utility import get_data, config
 from pathlib import Path
 import logging
 
 
 bot = discord.Bot(status=discord.Status.do_not_disturb, intents = discord.Intents().all())
 
-setting = readJson('setting')
-version = setting['version']
+
 
 @bot.event
 async def on_ready():
@@ -26,16 +25,15 @@ async def on_ready():
       logging.info(f'已載入 {cog_name} 模塊')
   else:
     logging.warning('沒有任何模組被載入，請確認cogs資料夾')
-  logging.info(f"{bot.user} is online, current version: {version}")
-  token = readJson('token')
-  channel = bot.get_channel(token['online'])
-  await channel.send(f"女僕已上線，目前版本 {version}")
+  logging.info(f"{bot.user} is online, current version: {config.version}")
+  channel = bot.get_channel(config.online_message)
+  await channel.send(f"女僕已上線，目前版本 {config.version}")
 
 
 @tasks.loop(seconds=60)
 async def status():
   global chat_data
-  chat = readJson('chat')
+  chat = get_data('chat')
   await bot.change_presence(status=discord.Status.do_not_disturb,activity=discord.Game(random.choice(chat["status"])))
   chat_data = chat['chat']
 
@@ -56,7 +54,6 @@ async def on_message(msg):
   elif chat_response(msg.content):
     await msg.channel.send(chat_response(msg.content))
 
-token = readJson('token')
 
 
 #載入cog
@@ -70,6 +67,4 @@ if __name__ ==  "__main__": #執行機器人
   text = '分詞系統測試成功'
   a = ' '.join(jieba.cut(text, cut_all=False))
   logging.info(a)
-  token = readJson('token')
-  TOKEN = token['TOKEN']
-  bot.run(TOKEN)
+  bot.run(config.bot_token)
