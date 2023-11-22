@@ -1,22 +1,8 @@
-import logging.config
-import sys
-from fun import readJson
-
-#log設定
-logging.config.dictConfig(readJson('log_config'))
-logger = logging.getLogger()
-
-def handle_exception(exc_type, exc_value, exc_traceback):
-    logger.error("程式碼發生錯誤或例外", exc_info=(exc_type, exc_value, exc_traceback))
-sys.excepthook = handle_exception
-
-
-
 import discord
 from discord.ext import commands
-from fun import *
+from utility import readJson
 from genshin import genshin_gacha
-
+import logging
 
 """
 所有跟機器人最基本功能有關聯的都在這
@@ -117,3 +103,29 @@ def setup(bot): # this is called by Pycord to setup the cog
     bot.add_cog(genshin(bot)) # add the cog to the bot
 
 logging.debug('genshin_gacha had been imported')
+
+def embed_text_adjustment(input): #調整每排名稱數，讓名字不會被切斷
+    max_line_length = 15
+
+    # 初始化結果列表
+    result = []
+    current_line = []
+
+    # 遍歷原始列表
+    for name in input:
+        # 檢查將當前名字添加到當前行是否超出最大字數
+        if len(', '.join(current_line + [name])) <= max_line_length:
+            current_line.append(name)
+        else:
+            # 如果超出最大字數，將當前行添加到結果列表中，並初始化新的當前行
+            result.append(', '.join(current_line))
+            current_line = [name]
+
+    # 將剩餘的當前行添加到結果列表
+    result.append(', '.join(current_line))
+
+    # 將結果列表中的元素使用'\n'分隔成最終字符串
+    final_result = '\n'.join(result)
+
+    # 輸出結果
+    return final_result

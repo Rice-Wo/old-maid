@@ -1,16 +1,3 @@
-import logging.config
-import sys
-from fun import readJson
-
-#log設定
-logging.config.dictConfig(readJson('log_config'))
-logger = logging.getLogger()
-
-def handle_exception(exc_type, exc_value, exc_traceback):
-    logger.error("程式碼發生錯誤或例外", exc_info=(exc_type, exc_value, exc_traceback))
-sys.excepthook = handle_exception
-
-
 import discord
 from discord.ext import commands
 from fun import *
@@ -24,7 +11,7 @@ from fun import *
 class system(commands.Cog):
     def __init__(self, bot): 
         self.bot = bot   
-        self.setting = readJson('setting')
+        self.setting = readJson('setting/setting')
         self.version = self.setting['version']
 
     token = readJson('token')
@@ -68,3 +55,16 @@ def setup(bot): # this is called by Pycord to setup the cog
     bot.add_cog(system(bot)) # add the cog to the self.bot
 
 logging.debug('system had been imported')
+
+
+def chat_update(url): # 更新聊天資料
+    destination = "chat.json"
+    try:
+        response = requests.get(url)
+        with open(destination, 'w', encoding='utf-8') as file:
+            file.write(response.text, ensure_ascii=False, indent=4)
+        logger.info("成功下載並替換 JSON 檔案")
+    except requests.exceptions.RequestException as e:
+        logger.error("下載檔案時發生錯誤: %s", str(e))
+    except Exception as e:
+        logger.error("處理檔案時發生錯誤: %s", str(e))

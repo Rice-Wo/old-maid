@@ -1,14 +1,11 @@
 from log.logging import handle_exception 
 import sys
-#抱錯
+#報錯設置
 sys.excepthook = handle_exception
 
 import discord
 from discord.ext import tasks, commands
 import random
-from datetime import timezone,timedelta
-import time
-import subprocess
 import jieba
 from fun import *
 from pathlib import Path

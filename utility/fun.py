@@ -1,35 +1,13 @@
-import sys
-import os
 import json
 import requests
 import discord
 import logging.config
-
-#logging設定
-with open('log_config.json', "r", encoding='utf-8') as f: # 讀取log設定json檔案
-    log = json.load(f)
-
-logging.config.dictConfig(log)
-logger = logging.getLogger()
-
-def handle_exception(exc_type, exc_value, exc_traceback): #設定發生問題時的處理方式
-    logger.error("程式碼發生錯誤或例外", exc_info=(exc_type, exc_value, exc_traceback))
-sys.excepthook = handle_exception
+from .json import *
 
 
-# 定義全域變數
 
 
-def writeJson(file, item): #JSON寫入
-    with open(file + '.json', "w+", encoding='utf-8') as f:
-        f.write(json.dumps(item, ensure_ascii=False, indent=4))
-   # logging.debug(f'寫入資料至 {file}.json 資料內容{item}')
 
-
-def readJson(file): #JSON讀取
-    with open(file + '.json', "r", encoding='utf-8') as f:
-        data = json.load(f)
-    return data
 
 
 async def get_data(location): #取得天氣預報資料
@@ -121,32 +99,9 @@ def changeLog(): #取得更新內容
         print("无法获取最新发布信息。")
     return output
 
-def chat_update(url):
-    destination = "chat.json"
-    try:
-        response = requests.get(url)
-        with open(destination, 'w', encoding='utf-8') as file:
-            file.write(response.text, ensure_ascii=False, indent=4)
-        logger.info("成功下載並替換 JSON 檔案")
-    except requests.exceptions.RequestException as e:
-        logger.error("下載檔案時發生錯誤: %s", str(e))
-    except Exception as e:
-        logger.error("處理檔案時發生錯誤: %s", str(e))
 
-def prerelease(): #取得更新內容
-    response = requests.get("https://api.github.com/repos/Rice-Wo/Rice-Wo-maid/releases")
-    release = response.json()
-    latest_release = release[0]
 
-    if response.status_code == 200:
-        if latest_release.get("prerelease"):
-            changelog = latest_release["body"]
-            version = latest_release["tag_name"]
 
-            output = f'# {version} \n{changelog}'
-    else:
-        print("无法获取最新发布信息。")
-    return output
 
 def embed_text_adjustment(input):
     max_line_length = 15
