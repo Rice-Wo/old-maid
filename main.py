@@ -9,7 +9,7 @@ import random
 import jieba
 from fun import *
 from pathlib import Path
-
+import logging
 
 
 bot = discord.Bot(status=discord.Status.do_not_disturb, intents = discord.Intents().all())
