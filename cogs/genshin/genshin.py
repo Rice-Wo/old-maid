@@ -1,13 +1,15 @@
 import random
 from collections import defaultdict
-from fun import writeJson, readJson
+
+from utility import get_data, input_data
+
 import logging
 
 class genshin_gacha:
     def __init__(self, user):
         self.id = str(user)
-        self.data = readJson('gacha')
-        self.setting = readJson('gacha_setting')
+        self.data = get_data('gacha')
+        self.setting = get_data('gacha_setting')
 
         if self.id not in self.data:
             self.register()
@@ -33,7 +35,7 @@ class genshin_gacha:
         self.data[self.id]['pity4'] = self.pity4
         self.data[self.id]['genshin']['5star'] = self.genshin5
         self.data[self.id]['genshin']['4star'] = self.genshin4
-        writeJson('gacha', self.data)
+        input_data('gacha', self.data)
 
 
     def register(self): # 註冊使用者
@@ -48,7 +50,7 @@ class genshin_gacha:
         self.data[self.id]['genshin']['5star'] = {}
         self.data[self.id]['genshin']['4star'] = {}
 
-        writeJson('gacha', self.data)
+        input_data('gacha', self.data)
 
 
     def pull_star(self): # 抽出星級
@@ -70,7 +72,7 @@ class genshin_gacha:
      # 機率改動
         if self.pity5_pulls >= self.setting['五星機率增加']:
             self.pro['5'] += 0.06
-            writeJson('gacha', self.data)
+            input_data('gacha', self.data)
         elif self.pity4_pulls >= self.setting['四星機率增加']:
             self.pro['4'] = self.setting['四星機率up']
         

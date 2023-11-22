@@ -1,10 +1,11 @@
 import discord
 from discord.ext import commands
-from fun import *
 import random
 from datetime import timezone,timedelta
 import time
+import logging
 
+from .ui import weather_select, changeLog
 
 """
 所有跟機器人最基本功能有關聯的都在這

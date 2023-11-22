@@ -7,7 +7,7 @@ import discord
 from discord.ext import tasks, commands
 import random
 import jieba
-from fun import *
+from utility import *
 from pathlib import Path
 import logging
 

@@ -14,8 +14,4 @@ def get_data(file): #JSON讀取
     return data
 
 
-def get_setting(file): #JSON讀取
-    with open('settings/' + file + '.json', "r", encoding='utf-8') as f:
-        data = json.load(f)
-    return data
 

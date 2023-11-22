@@ -1,6 +1,8 @@
 import discord
 from discord.ext import commands
-from fun import *
+import requests
+
+from utility import get_data, config
 
 """
 所有跟機器人最基本功能有關聯的都在這
@@ -11,8 +13,7 @@ from fun import *
 class system(commands.Cog):
     def __init__(self, bot): 
         self.bot = bot   
-        self.setting = readJson('setting/setting')
-        self.version = self.setting['version']
+        self.version = config.version
 
     token = readJson('token')
     guild_ids = token['server']
@@ -63,8 +64,8 @@ def chat_update(url): # 更新聊天資料
         response = requests.get(url)
         with open(destination, 'w', encoding='utf-8') as file:
             file.write(response.text, ensure_ascii=False, indent=4)
-        logger.info("成功下載並替換 JSON 檔案")
+        logging.info("成功下載並替換聊天資料")
     except requests.exceptions.RequestException as e:
-        logger.error("下載檔案時發生錯誤: %s", str(e))
+        logging.error("下載聊天資料時發生錯誤: %s", str(e))
     except Exception as e:
-        logger.error("處理檔案時發生錯誤: %s", str(e))
+        logging.error("處理聊天資料時發生錯誤: %s", str(e))
