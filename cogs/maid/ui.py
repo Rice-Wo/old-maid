@@ -1,37 +1,13 @@
-import sys
-import os
+import logging
 import json
 import requests
 import discord
-import logging.config
 
-#logging設定
-with open('log_config.json', "r", encoding='utf-8') as f:
-    log = json.load(f)
-logging.config.dictConfig(log)
-logger = logging.getLogger()
-def handle_exception(exc_type, exc_value, exc_traceback):
-    logger.error("程式碼發生錯誤或例外", exc_info=(exc_type, exc_value, exc_traceback))
-sys.excepthook = handle_exception
-
-
-# 定義全域變數
-
-
-def writeJson(file, item): #JSON寫入
-    with open(file + '.json', "w+", encoding='utf-8') as f:
-        f.write(json.dumps(item, ensure_ascii=False, indent=4))
-   # logging.debug(f'寫入資料至 {file}.json 資料內容{item}')
-
-
-def readJson(file): #JSON讀取
-    with open(file + '.json', "r", encoding='utf-8') as f:
-        data = json.load(f)
-    return data
+from utility import config
 
 
 async def get_data(location): #取得天氣預報資料
-  token = readJson('token')
+  token = config.weather_token
   url = "https://opendata.cwb.gov.tw/api/v1/rest/datastore/F-C0032-001"
   params = {
       "Authorization": token['CWB-TOKEN'],
@@ -113,61 +89,4 @@ def changeLog(): #取得更新內容
             changelog = latest_release["body"]
             version = latest_release["tag_name"]
             output = f'# {version} \n{changelog}'
-        else:
-            print("最新发布为预发布版本。")
-    else:
-        print("无法获取最新发布信息。")
     return output
-
-def chat_update(url):
-    destination = "chat.json"
-    try:
-        response = requests.get(url)
-        with open(destination, 'w', encoding='utf-8') as file:
-            file.write(response.text, ensure_ascii=False, indent=4)
-        logger.info("成功下載並替換 JSON 檔案")
-    except requests.exceptions.RequestException as e:
-        logger.error("下載檔案時發生錯誤: %s", str(e))
-    except Exception as e:
-        logger.error("處理檔案時發生錯誤: %s", str(e))
-
-def prerelease(): #取得更新內容
-    response = requests.get("https://api.github.com/repos/Rice-Wo/Rice-Wo-maid/releases")
-    release = response.json()
-    latest_release = release[0]
-
-    if response.status_code == 200:
-        if latest_release.get("prerelease"):
-            changelog = latest_release["body"]
-            version = latest_release["tag_name"]
-
-            output = f'# {version} \n{changelog}'
-    else:
-        print("无法获取最新发布信息。")
-    return output
-
-def embed_text_adjustment(input):
-    max_line_length = 15
-
-    # 初始化結果列表
-    result = []
-    current_line = []
-
-    # 遍歷原始列表
-    for name in input:
-        # 檢查將當前名字添加到當前行是否超出最大字數
-        if len(', '.join(current_line + [name])) <= max_line_length:
-            current_line.append(name)
-        else:
-            # 如果超出最大字數，將當前行添加到結果列表中，並初始化新的當前行
-            result.append(', '.join(current_line))
-            current_line = [name]
-
-    # 將剩餘的當前行添加到結果列表
-    result.append(', '.join(current_line))
-
-    # 將結果列表中的元素使用'\n'分隔成最終字符串
-    final_result = '\n'.join(result)
-
-    # 輸出結果
-    return final_result
