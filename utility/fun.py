@@ -5,19 +5,6 @@ import logging.config
 from .config import config
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 def embed_text_adjustment(input):
     max_line_length = 15
 
