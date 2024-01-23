@@ -5,7 +5,7 @@ from .genshin import genshin_gacha
 import logging
 
 """
-所有跟機器人最基本功能有關聯的都在這
+原神抽卡模擬
 """
 
 
