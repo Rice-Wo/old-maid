@@ -5,7 +5,10 @@ import logging.config
 from .config import config
 
 
-def embed_text_adjustment(input):
+def embed_text_adjustment(input: list[str]) -> str: 
+    """
+    
+    """
     max_line_length = 15
 
     # 初始化結果列表
