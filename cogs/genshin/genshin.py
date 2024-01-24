@@ -6,27 +6,27 @@ from utility import get_data, input_data
 import logging
 
 class genshin_gacha:
-    def __init__(self, user):
+    def __init__(self, user: int|str):
         self.id = str(user)
         self.data = get_data('gacha')
         self.setting = get_data('gacha_setting')
 
-        if self.id not in self.data:
+        if self.id not in self.data: # 沒有該使用者資料時註冊
             self.register()
-
+        # 登入使用者ID
         self.user = self.data[self.id]
+        # 設定變數
+        self.tot_pulls: int = self.data[self.id]['total_pulls']
+        self.pro: dict = self.user['pro']
+        self.pity5_pulls: int = self.user['pity5_pulls']
+        self.pity5: bool = self.user['pity5']
+        self.pity4_pulls: int = self.user['pity4_pulls']
+        self.pity4: bool = self.user['pity4']
+        self.genshin5: dict = self.user['genshin']['5star']
+        self.genshin4: dict = self.user['genshin']['4star']
 
-        self.tot_pulls = self.data[self.id]['total_pulls']
-        self.pro = self.user['pro']
-        self.pity5_pulls = self.user['pity5_pulls']
-        self.pity5 = self.user['pity5']
-        self.pity4_pulls = self.user['pity4_pulls']
-        self.pity4 = self.user['pity4']
-        self.genshin5 = self.user['genshin']['5star']
-        self.genshin4 = self.user['genshin']['4star']
 
-
-    def update_data(self):
+    def update_data(self) -> None: #更新資料
         self.data[self.id]['total_pulls'] = self.tot_pulls
         self.data[self.id]['pro'] = self.pro
         self.data[self.id]['pity5_pulls'] = self.pity5_pulls
@@ -38,7 +38,7 @@ class genshin_gacha:
         input_data('gacha', self.data)
 
 
-    def register(self): # 註冊使用者
+    def register(self) -> None: # 註冊使用者
         self.data[self.id] = {}
         self.data[self.id]['total_pulls'] = 0
         self.data[self.id]['pity5_pulls'] = 0
@@ -53,7 +53,7 @@ class genshin_gacha:
         input_data('gacha', self.data)
 
 
-    def pull_star(self): # 抽出星級
+    def pull_star(self) -> str: # 抽出星級
         pro = self.pro
         rand_num = random.random()
         addup_prob = 0
@@ -64,7 +64,7 @@ class genshin_gacha:
                 return star
 
 
-    def gacha_system(self): #抽卡本體
+    def gacha_system(self) -> dict: #抽卡本體
         self.tot_pulls += 1
         self.pity5_pulls += 1
         self.pity4_pulls += 1
@@ -85,11 +85,8 @@ class genshin_gacha:
             self.pro['5'] = self.setting['基礎機率']['5']
             if self.pity5 == True:
                 up = True
-               # logging.debug(f'pity5: True')               
             else:
                 up = random.choice([True, False])
-                #logging.debug(f'pity5: False')
-            #logging.debug(f'up5: {up}')
             if up == True:
                 result = self.setting['up五星']
                 self.pity5 = False
@@ -101,18 +98,14 @@ class genshin_gacha:
                 self.genshin5[result] = 1
             else:
                 self.genshin5[result] +=1
-            #logging.debug(f'5result: {result}')
 
         if star =='4':
             self.pity4_pulls = 0
             self.pro['4'] = self.setting['基礎機率']['4']
             if self.pity4 == True:
                 up = True
-            #    logging.debug(f'pity4: True')               
             else:
                 up = random.choice([True, False])
-                #logging.debug(f'pity4: False')
-           # logging.debug(f'up4: {up}')
             if up == True:
                 result = random.choice(self.setting['up四星'])
                 self.pity4 = False
@@ -124,7 +117,6 @@ class genshin_gacha:
                 self.genshin4[result] = 1
             else:
                 self.genshin4[result] +=1
-            #logging.debug(f'4result: {result}')
 
         if star == '3':
             result = random.choice(self.setting['三星'])
@@ -133,13 +125,13 @@ class genshin_gacha:
         return output
 
 
-    def gacha(self):
+    def gacha(self) -> dict:
         result = self.gacha_system()
         self.update_data()
         logging.debug(result)
         return result
     
-    def ten_gacha(self):
+    def ten_gacha(self) -> dict:
         result = defaultdict(list)
         for i in range(10):
             output = self.gacha_system()
@@ -171,6 +163,11 @@ class genshin_gacha:
 
         return final_result
     
-  
-        
+
+if __name__ == '__main__':
+
+    user = 'test'
+    genshin_gacha(user)
+    
+    genshin_gacha.ten_gacha
 
