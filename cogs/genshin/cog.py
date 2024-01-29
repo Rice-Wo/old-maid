@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from utility import get_data, embed_text_adjustment
+from .utility import get_data, embed_text_adjustment
 from .genshin import genshin_gacha
 import logging
 

@@ -1,9 +1,13 @@
 import random
 from collections import defaultdict
-
-from utility import get_data, input_data
-
 import logging
+
+
+try:
+    from .utility import get_data, input_data
+except ImportError:
+    from utility import get_data, input_data
+
 
 class genshin_gacha:
     def __init__(self, user: int|str):
@@ -166,8 +170,9 @@ class genshin_gacha:
 
 if __name__ == '__main__':
 
+    print('現在單獨執行 genshin.py 中')
     user = 'test'
-    genshin_gacha(user)
+    gacha = genshin_gacha(user)
     
-    genshin_gacha.ten_gacha
+    gacha.ten_gacha()
 
