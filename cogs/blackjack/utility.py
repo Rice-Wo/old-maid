@@ -13,7 +13,7 @@ def get_data(file): #JSON讀取
         data = json.load(f)
     return data
 
-def list_str(list:list): # 將列表改成字串
+def list_str(list:list)-> str: # 將列表改成字串
     return ', '.join(list)
 
 

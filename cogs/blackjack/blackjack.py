@@ -31,10 +31,10 @@ class blackjack_game:
         point = 0
         A_num = 0
         for card in hand:
-            if card[2] in ['J', 'Q', 'K']:
+            if card[2] in ['J', 'Q', 'K']: 
                 point += 10
             elif card[2] == 'A':
-                A_num += 1
+                A_num += 1 
             else:
                 point += int(card[2:])
         point += A_num
