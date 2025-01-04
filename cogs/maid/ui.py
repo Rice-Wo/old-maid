@@ -3,7 +3,7 @@ import json
 import requests
 import discord
 
-from utility import config
+from config import config
 
 
 async def get_data(location): #取得天氣預報資料

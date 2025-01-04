@@ -1,11 +1,19 @@
 import json
-import requests
-import discord
-import logging.config
-from .config import config
+import logging
 
 
-def embed_text_adjustment(input):
+
+def input_data(file, item): #JSON寫入
+    with open('data/'+ file + '.json', "w+", encoding='utf-8') as f:
+        f.write(json.dumps(item, ensure_ascii=False, indent=4))
+    logging.debug(f'寫入資料至 {file}.json 資料內容{item}') # 紀錄資料寫入
+
+def get_data(file): #JSON讀取
+    with open('data/'+ file + '.json', "r", encoding='utf-8') as f:
+        data = json.load(f)
+    return data
+
+def embed_text_adjustment(input: list[str]) -> str: 
     max_line_length = 15
 
     # 初始化結果列表
@@ -30,3 +38,4 @@ def embed_text_adjustment(input):
 
     # 輸出結果
     return final_result
+

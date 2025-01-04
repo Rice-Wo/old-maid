@@ -3,7 +3,8 @@ from discord.ext import commands
 import requests
 import logging
 
-from utility import get_data, config
+from .utility import get_data
+from config import config
 
 """
 所有跟機器人最基本功能有關聯的都在這
@@ -27,7 +28,7 @@ class system(commands.Cog):
     @commands.is_owner()
     async def _close(self, ctx):
         await ctx.respond('正在關閉機器人')
-        await self.self.bot.close()
+        await self.bot.close()
 
     @discord.slash_command(name="test測試", description="測試指令功能用", guild_id=guild_ids)
     @commands.is_owner()

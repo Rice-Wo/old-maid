@@ -11,7 +11,7 @@
     "file_handler": {
       "class": "logging.FileHandler",
       "formatter": "standard",
-      "filename": "log_file.log",
+      "filename": "log/log_file.log",
       "mode": "w",
       "encoding": "utf-8",
       "level": "DEBUG"  
